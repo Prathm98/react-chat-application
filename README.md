@@ -1,2 +1,3 @@
 # react-chat-application
-React based real time chat app.
+
+Full-stack chat application from front to back with React, Redux, Firebase 5, and Material css.
