@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import LoadingSmall from './LoadingSmall';
 import { connect } from 'react-redux';
 import firebase from '../../firebase';
+import M from 'materialize-css';
 
 const AddChannel = ({ user: { currentUser }}) => {
   const [formData, setFormData] = useState({
@@ -18,25 +19,32 @@ const AddChannel = ({ user: { currentUser }}) => {
 
   const onSubmit = async e => {
     e.preventDefault();
-    try {
-      const key = channelRef.push().key;
+    if(name === null || name === undefined || (name.trim()).length < 1 || 
+      details === null || details === undefined || (details.trim()).length < 1){
+      setErrors({type: 'danger', error: ['All Fields are required!!!']});
+    }else{
+      try {
+        const key = channelRef.push().key;
 
-      const newChannel = {
-        id: key,
-        name: name,
-        details: details,
-        createdBy: {
-          name: currentUser.displayName,
-          avatar: currentUser.photoURL
-        }
-      };
+        const newChannel = {
+          id: key,
+          name: name,
+          details: details,
+          createdBy: {
+            name: currentUser.displayName,
+            avatar: currentUser.photoURL
+          }
+        };
 
-      await channelRef.child(key).update(newChannel);
-      setFormData({name:'', details:''});
-    } catch (err) {
-      console.error(err);
-      setErrors({type: 'danger', error: [err.message]});
-    }    
+        await channelRef.child(key).update(newChannel);
+        setFormData({name:'', details:''});
+        M.toast({html: "Channel Added"});
+      } catch (err) {
+        console.error(err);
+        M.toast({html: 'Unable to add channel'});
+        setErrors({type: 'danger', error: [err.message]});
+      }
+    } 
   }
 
   return (
