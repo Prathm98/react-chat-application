@@ -5,6 +5,7 @@ import background from '../../img/background.jpg';
 import { clearUser } from "../../actions/user";
 import firebase from '../../firebase';
 import PropTypes from 'prop-types';
+import ChannelsSideNav from './ChannelsSideNav';
 
 const Navbar = ({ clearUser }) => {
   const logout = async () => {
@@ -30,13 +31,10 @@ const Navbar = ({ clearUser }) => {
             <a href="#email"><span className="white-text email">View Profile</span></a>            
           </div>
         </li>
-        <li><a href="#!"><i className="material-icons">cloud</i>First Link With Icon</a></li>
-        <li><a href="#!">Second Link</a></li>
-        <li><div className="divider"></div></li>
-        <li><a className="subheader">Subheader</a></li>
-        <li><a className="waves-effect" href="#!">Third Link With Waves</a></li>
-        <li><div className="divider"></div></li>
-        <li><a href="#!" onClick={logout}>Sign Out</a></li>
+        <ChannelsSideNav />
+        <li><a href="#!" onClick={logout}>
+          <i className="material-icons">keyboard_return</i>Sign Out
+        </a></li>
       </ul>
 
       <nav className="hide-on-large-only">

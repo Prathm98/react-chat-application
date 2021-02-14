@@ -35,7 +35,7 @@ const Login = ({ user }) => {
         // setFormData({email: '', password: ''});
       } catch (err) {
         console.error(err);
-        setErrors({type: 'danger', error: [err.message]});      
+        setErrors({type: 'danger', error: [err.message]});
       }
     }
     // setLoading(false);
