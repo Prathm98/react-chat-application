@@ -1,10 +1,11 @@
 import React, { Fragment, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import firebase from "../../firebase";
 import LoadingSmall from '../layout/LoadingSmall';
 import md5 from 'md5';
+import { connect } from 'react-redux';
 
-const Login = () => {
+const Login = ({ history, user }) => {
 
   const [formData, setFormData] = useState({
     email: '', password: ''
@@ -41,12 +42,16 @@ const Login = () => {
     setLoading(false); 
   }
 
+  if(user){
+    history.push("/home");
+  }
+
   return (
     <Fragment>
       <div className="container text-center">
         <div className="row">
           <h4 className="teal-text">
-            <i className="material-icons large">chat</i><br />Login for Chat App
+            <i className="material-icons large">whatshot</i><br />Login for Chat App
           </h4>
         </div>
         <div className="row">
@@ -75,7 +80,7 @@ const Login = () => {
               </div>
               <div className="container">
                 {loading ? <LoadingSmall />:
-                <button className="waves-effect waves-light btn" onClick={e => onSubmit(e)}>
+                <button type="submit" className="waves-effect waves-light btn" onClick={e => onSubmit(e)}>
                   <i className="material-icons right">send</i>
                   Login
                 </button>}
@@ -92,4 +97,8 @@ const Login = () => {
   );
 }
 
-export default Login;
+const mapStateToProps = state => ({
+  user: state.user
+});
+
+export default connect(mapStateToProps, {})(withRouter(Login));

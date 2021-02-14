@@ -1,10 +1,11 @@
 import React, { Fragment, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import firebase from "../../firebase";
 import LoadingSmall from '../layout/LoadingSmall';
 import md5 from 'md5';
+import { connect } from 'react-redux';
 
-const Register = () => {
+const Register = ({history, user}) => {
 
   const [formData, setFormData] = useState({
     name:'', email: '', password: '', password2: ''
@@ -60,12 +61,16 @@ const Register = () => {
     });
   }
 
+  if(user){
+    history.push("/home");
+  }
+
   return (
     <Fragment>
       <div className="container text-center">
         <div className="row">
           <h4 className="teal-text">
-            <i className="material-icons large">chat</i><br />Register for Chat App
+            <i className="material-icons large">whatshot</i><br />Register for Chat App
           </h4>
         </div>
         <div className="row">
@@ -108,7 +113,7 @@ const Register = () => {
               </div>
               <div className="container">
                 {loading ? <LoadingSmall />:
-                <button className="waves-effect waves-light btn" onClick={e => onSubmit(e)}>
+                <button type="submit" className="waves-effect waves-light btn" onClick={e => onSubmit(e)}>
                   <i className="material-icons right">send</i>
                   Submit
                 </button>}
@@ -125,4 +130,8 @@ const Register = () => {
   );
 }
 
-export default Register;
+const mapStateToProps = state => ({
+  user: state.user
+});
+
+export default connect(mapStateToProps, {})(withRouter(Register));
