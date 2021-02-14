@@ -2,7 +2,6 @@ import React, { Fragment, useState } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import firebase from "../../firebase";
 import LoadingSmall from '../layout/LoadingSmall';
-import md5 from 'md5';
 import { connect } from 'react-redux';
 
 const Login = ({ history, user }) => {
@@ -42,7 +41,7 @@ const Login = ({ history, user }) => {
     setLoading(false); 
   }
 
-  if(user){
+  if(user.currentUser){
     history.push("/home");
   }
 
@@ -55,8 +54,8 @@ const Login = ({ history, user }) => {
           </h4>
         </div>
         <div className="row">
-          <div className="col l4 m2 s1"></div>
-          <div className="col l4 s10 m8 card register">
+          <div className="col l3 m2 s1"></div>
+          <div className="col l6 s10 m8 card register">
             <form>
               <div className="row">
                 {errors.error.length > 0 && <div className={`error-${errors.type}`}>
@@ -90,7 +89,7 @@ const Login = ({ history, user }) => {
               Don't have an account? <Link to="/register">Sign Up</Link>
             </div>
           </div>
-          <div className="col l4 m2 s1"></div>
+          <div className="col l3 m2 s1"></div>
         </div>
       </div>
     </Fragment>
