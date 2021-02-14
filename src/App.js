@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { setUser } from './actions/user';
 import { useEffect } from 'react';
 import firebase from './firebase';
+import Home from './components/Home';
 
 function App({ setUser }) {
   useEffect(() => {
@@ -23,6 +24,7 @@ function App({ setUser }) {
           <Route exact path="/" component={Login} />
           <Route path="/login" component={Login} />
           <Route path="/register" component={Register} />
+          <Route path="/home" component={Home} />
         </Switch>
       </Router>
     </div>    

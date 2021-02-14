@@ -8,6 +8,7 @@
     "@testing-library/user-event": "^12.7.1",
     "emoji-mart": "^3.0.0",
     "firebase": "^8.2.7",
+    "materialize-css": "^1.0.0",
     "md5": "^2.3.0",
     "mime-types": "^2.1.28",
     "moment": "^2.29.1",
