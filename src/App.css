@@ -4,6 +4,22 @@ body {
 .text-center {
   text-align: center;
 }
+.error-danger {
+  text-align: left;
+  background-color: #ffcdd2;
+  color: #c62828;
+  padding: 15px;
+  border: 1px solid #c62828;
+  border-radius: 5px;
+}
+.error-success {
+  text-align: left;
+  background-color: #c8e6c9;
+  color: #2e7d32;
+  padding: 15px;
+  border: 1px solid #2e7d32;
+  border-radius: 5px;
+}
 .register {
   margin-top: 5%;
   padding: 3% !important;
