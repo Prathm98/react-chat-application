@@ -7,7 +7,7 @@ import firebase from '../../firebase';
 import PropTypes from 'prop-types';
 import ChannelsSideNav from './ChannelsSideNav';
 
-const Navbar = ({ clearUser }) => {
+const Navbar = ({ clearUser, user: {currentUser} }) => {
   const logout = async () => {
     try {
       await firebase.auth().signOut();
@@ -25,9 +25,13 @@ const Navbar = ({ clearUser }) => {
           <div className="user-view">
             <div className="background">
               <img src={background} />
-            </div>            
-            <i className="material-icons white-text medium center">whatshot</i>                          
-            <a><span className="white-text name">Prathmesh Wakodikar</span></a>            
+            </div>
+            <Link to="/" className="brand-logo center white-text">
+              <i className="material-icons white-text medium center">whatshot</i>
+            </Link>
+            <a><span className="white-text name">
+              {(currentUser && currentUser.displayName)? currentUser.displayName: 'User\'s name'}
+            </span></a>            
             <a href="#email"><span className="white-text email">View Profile</span></a>            
           </div>
         </li>
@@ -42,7 +46,10 @@ const Navbar = ({ clearUser }) => {
           backgroundImage: `url(${background})`, 
           backgroundPosition: 'bottom'
         }}>
-          <Link to="/" className="brand-logo center white-text">Chat App</Link>          
+          <Link to="/" className="brand-logo center white-text">
+            <i className="material-icons white-text small">whatshot</i>
+            Chat App
+          </Link>          
           <ul id="nav-mobile" className="left">
             <a href="#" data-target="slide-out" className="sidenav-trigger">
               <i className="material-icons white-text">menu</i>
@@ -55,9 +62,14 @@ const Navbar = ({ clearUser }) => {
 }
 
 Navbar.prototype = {
-  clearUser: PropTypes.func.isRequired
+  clearUser: PropTypes.func.isRequired,
+  user: PropTypes.object.isRequired
 };
 
-export default connect(null, {
+const mapStateToProp = state => ({
+  user: state.user
+});
+
+export default connect(mapStateToProp, {
   clearUser
 })(Navbar);

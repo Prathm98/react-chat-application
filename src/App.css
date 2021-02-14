@@ -26,6 +26,12 @@ body {
 }
 .message-sidenav {
   margin-left: 300px;
+  padding: 1%;
+}
+.channel-heading {
+  padding: 1% 2% !important;
+  font-size: 24px;
+  font-weight: 600;
 }
 @media only screen and (max-width: 992px) {
   .message-sidenav {
