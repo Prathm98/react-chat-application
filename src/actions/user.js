@@ -8,7 +8,6 @@ export const setUser = user => dispatch => {
 }
 
 export const clearUser = () => dispatch => {
-  console.log('clear');
   dispatch({
     type: CLEAR_USER
   });

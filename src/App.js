@@ -8,6 +8,7 @@ import { useEffect } from 'react';
 import firebase from './firebase';
 import Home from './components/Home';
 import PrivateRoute from './components/routing/PrivateRoute';
+import PropTypes from 'prop-types';
 
 function App({ setUser, clearUser }) {
   useEffect(() => {
@@ -34,6 +35,11 @@ function App({ setUser, clearUser }) {
   );
 }
 
+App.prototype = {
+  setUser: PropTypes.func.isRequired,
+  clearUser: PropTypes.func.isRequired
+};
+
 export default connect(null, {
-  setUser
+  setUser, clearUser
 })(App);

@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import background from '../../img/background.jpg';
 import { clearUser } from "../../actions/user";
 import firebase from '../../firebase';
+import PropTypes from 'prop-types';
 
 const Navbar = ({ clearUser }) => {
   const logout = async () => {
@@ -54,6 +55,10 @@ const Navbar = ({ clearUser }) => {
     </div>
   )
 }
+
+Navbar.prototype = {
+  clearUser: PropTypes.func.isRequired
+};
 
 export default connect(null, {
   clearUser

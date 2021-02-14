@@ -1,11 +1,13 @@
 import React, { Fragment, useState } from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import firebase from "../../firebase";
 import LoadingSmall from '../layout/LoadingSmall';
 import md5 from 'md5';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import Spinner from '../layout/Spinner';
 
-const Register = ({history, user}) => {
+const Register = ({ user}) => {
 
   const [formData, setFormData] = useState({
     name:'', email: '', password: '', password2: ''
@@ -61,12 +63,12 @@ const Register = ({history, user}) => {
     });
   }
 
-  if(user.currentUser){
-    history.push("/home");
+  if(!user.loading && user.currentUser){
+    return <Redirect to="/home" />;
   }
 
   return (
-    <Fragment>
+    user.loading? <Spinner/> :<Fragment>
       <div className="container text-center">
         <div className="row">
           <h4 className="teal-text">
@@ -134,4 +136,8 @@ const mapStateToProps = state => ({
   user: state.user
 });
 
-export default connect(mapStateToProps, {})(withRouter(Register));
+Register.prototype = {
+  user: PropTypes.object
+};
+
+export default connect(mapStateToProps, {})(Register);

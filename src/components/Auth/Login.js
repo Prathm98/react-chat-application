@@ -1,17 +1,17 @@
 import React, { Fragment, useState } from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import firebase from "../../firebase";
 import LoadingSmall from '../layout/LoadingSmall';
 import { connect } from 'react-redux';
+import Spinner from '../layout/Spinner';
+import PropTypes from 'prop-types';
 
-const Login = ({ history, user }) => {
-
+const Login = ({ user }) => {
   const [formData, setFormData] = useState({
     email: '', password: ''
   });
   const [errors, setErrors] = useState({type: 'danger', error: []});
-  const [loading, setLoading] = useState(false);
-  const [userRef, setUserRef] = useState(firebase.database().ref('users'));
+  const [loading, setLoading] = useState(false);  
 
   const onChange = e => setFormData({...formData, [e.target.name]: e.target.value});
 
@@ -32,21 +32,22 @@ const Login = ({ history, user }) => {
       try {
         let userData = await firebase.auth().signInWithEmailAndPassword(email, password);
         console.log(userData);
-        setFormData({email: '', password: ''});
+        // setFormData({email: '', password: ''});
       } catch (err) {
         console.error(err);
         setErrors({type: 'danger', error: [err.message]});      
       }
     }
-    setLoading(false); 
+    // setLoading(false);
   }
-
-  if(user.currentUser){
-    history.push("/home");
+  
+  if(!user.loading && user.currentUser){
+    return <Redirect to="/home" />;   
   }
+  
 
   return (
-    <Fragment>
+    user.loading ? <Spinner /> :<Fragment>
       <div className="container text-center">
         <div className="row">
           <h4 className="teal-text">
@@ -66,20 +67,20 @@ const Login = ({ history, user }) => {
                 <div className="input-field col s12">
                   <i className="material-icons prefix">email</i>
                   <input name="email" id="email" type="email" className="validate"
-                    onChange={e => onChange(e)} value={email} required />
+                    onChange={e => {onChange(e)}} value={email} required />
                   <label htmlFor="email">Email</label>
                 </div>
               
                 <div className="input-field col s12">
                   <i className="material-icons prefix">vpn_key</i>
                   <input name="password" id="password" type="password" className="validate"
-                    onChange={e => onChange(e)} value={password} required />
+                    onChange={e => {onChange(e)}} value={password} required />
                   <label htmlFor="password">Password</label>
                 </div>              
               </div>
               <div className="container">
                 {loading ? <LoadingSmall />:
-                <button type="submit" className="waves-effect waves-light btn" onClick={e => onSubmit(e)}>
+                <button type="submit" className="waves-effect waves-light btn" onClick={e => {onSubmit(e)}}>
                   <i className="material-icons right">send</i>
                   Login
                 </button>}
@@ -96,8 +97,12 @@ const Login = ({ history, user }) => {
   );
 }
 
+Login.prototype = {
+  user: PropTypes.object
+};
+
 const mapStateToProps = state => ({
   user: state.user
 });
 
-export default connect(mapStateToProps, {})(withRouter(Login));
+export default connect(mapStateToProps, {})(Login);
