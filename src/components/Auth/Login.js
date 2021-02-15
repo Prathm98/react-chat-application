@@ -38,7 +38,7 @@ const Login = ({ user }) => {
         setErrors({type: 'danger', error: [err.message]});
       }
     }
-    // setLoading(false);
+    setLoading(false);
   }
   
   if(!user.loading && user.currentUser){
