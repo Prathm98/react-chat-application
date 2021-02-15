@@ -39,7 +39,7 @@ const Messages = ({channels: {currentChannel, loading}, user: {currentUser},
         </div>          
       </div>
       <div className="row">
-        <div className="card" style={{height: '400px', padding: '5px'}}>              
+        <div className="card" style={{minHeight: '400px', padding: '5px'}}>              
           {messages.messages.loading? <Spinner />: (currentChannel && currentChannel.id == messages.channelId &&
             messages.messages.length > 0)? 
             <ul className="collection">

@@ -9,7 +9,7 @@ import LoadingSmall from '../layout/LoadingSmall';
 const MessageForm = ({channels: {currentChannel, loading}, user}) => {
   const [message, setMessage] = useState('');
   const [messageRef, setMessageRef] = useState(firebase.database().ref('messages'));
-  const [loadingMsg, setLoadingMsg] = useState(false);
+  const [loadingMsg, setLoadingMsg] = useState(false);  
 
   const onSubmit = async () => {
     if(message === null || message === undefined || (message.trim()).length < 1){
@@ -51,9 +51,12 @@ const MessageForm = ({channels: {currentChannel, loading}, user}) => {
             onClick={onSubmit}>
             <i className="material-icons right">send</i>
             Send
-          </button>}      
-        </div>        
-      </div>
+          </button>}{' '}
+          <a className="waves-effect waves-light btn modal-trigger" href="#uploadFileModal">
+            <i className="material-icons right">attach_file</i>Upload File
+          </a>                      
+        </div>          
+      </div>      
     </Fragment>
   )
 }

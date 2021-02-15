@@ -74,7 +74,7 @@ const AddChannel = ({ user: { currentUser }}) => {
       </div>
       <div className="modal-footer">
         {loading ? <LoadingSmall />:<Fragment>
-          <a href="#!" className="modal-close waves-effect waves-green btn-flat"
+          <a href="#!" className="waves-effect waves-green btn-flat"
             onClick={e => onSubmit(e)}>Add</a>
           <a href="#!" className="modal-close waves-effect waves-green btn-flat">Cancel</a>
         </Fragment>}

@@ -4,6 +4,7 @@ import Navbar from './layout/Navbar';
 import Messages from './messages/Messages';
 import AddChannel from './layout/AddChannel';
 import MessageForm from './messages/MessageForm';
+import AddFile from './messages/AddFile';
 
 const Home = () => {
   useEffect(() => {
@@ -30,6 +31,7 @@ const Home = () => {
           <MessageForm />
         </div>  
       </div>
+      <AddFile />      
     </Fragment>
   )
 }

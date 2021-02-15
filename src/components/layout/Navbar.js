@@ -29,9 +29,9 @@ const Navbar = ({ clearUser, user: {currentUser} }) => {
             <Link to="/" className="brand-logo center white-text">
               <i className="material-icons white-text medium center">whatshot</i>
             </Link>
-            <a><span className="white-text name">
+            <a><span className="white-text name"><strong style={{textTransform: 'uppercase'}}>
               {(currentUser && currentUser.displayName)? currentUser.displayName: 'User\'s name'}
-            </span></a>            
+            </strong></span></a>
             <a href="#email"><span className="white-text email">View Profile</span></a>            
           </div>
         </li>
