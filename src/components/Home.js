@@ -3,6 +3,7 @@ import M from 'materialize-css';
 import Navbar from './layout/Navbar';
 import Messages from './messages/Messages';
 import AddChannel from './layout/AddChannel';
+import MessageForm from './messages/MessageForm';
 
 const Home = () => {
   useEffect(() => {
@@ -24,11 +25,9 @@ const Home = () => {
           <AddChannel />
         </div>
         <div className="row" style={{
-          padding: '1%', position: 'fixed', bottom: '0', width: '100%', marginBottom: '0'
+          padding: '0%', position: 'fixed', bottom: '0', width: '100%', marginBottom: '0'
         }}>
-          <div className="card col l9 m12 s12">
-            <input />
-          </div>
+          <MessageForm />
         </div>  
       </div>
     </Fragment>

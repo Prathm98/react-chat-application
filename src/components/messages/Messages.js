@@ -1,11 +1,33 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
+import { connect } from 'react-redux';
+import Spinner from '../layout/Spinner';
+import MessageItem from './MessageItem';
+import firebase from '../../firebase';
+import { setMessages } from '../../actions/messages';
 
-const Messages = () => {
+const Messages = ({channels: {currentChannel, loading}, user: {currentUser}, 
+  messages, setMessages}) => {
+  const [messageRef, setMessageRef] = useState(firebase.database().ref('messages'));  
+  
+  useEffect(() => {    
+    if(currentChannel && currentUser){
+      messageLoad(currentChannel.id);
+    }    
+  }, [currentChannel]);
+
+  const messageLoad = channelId => {
+    let loadedMessages = [];    
+    messageRef.child(channelId).on('child_added', snap => {
+      loadedMessages.push(snap.val());
+      setMessages(loadedMessages, channelId);      
+    });
+  }
+
   return (
-    <Fragment>      
+    loading? <Spinner/> :<Fragment>      
       <div className="row card channel-heading">
         <div className="col l6 s12 m4">
-          Channel <i className="material-icons">star_border</i>
+          {currentChannel && currentChannel.name} <i className="material-icons">star_border</i>
         </div>
         <div className="col l6 s12 m8">
           <div className="col l10 s10 m10">
@@ -16,13 +38,25 @@ const Messages = () => {
           </div>
         </div>          
       </div>
-      <div className="row" style={{maxHeight: '500px', overflowY:'scroll'}}>
-        <div className="card" style={{height: '400px'}}></div>
-        <div className="card" style={{height: '400px'}}></div>
-        <div className="card" style={{height: '400px'}}></div>
+      <div className="row">
+        <div className="card" style={{height: '400px', padding: '5px'}}>              
+          {messages.messages.loading? <Spinner />: (currentChannel && currentChannel.id == messages.channelId &&
+            messages.messages.length > 0)? 
+            <ul className="collection">
+              {messages.messages.map((msg, index) => <MessageItem key={index} msg={msg} />)}
+            </ul>: <h5>No Messages Posted yet</h5>}
+        </div>
       </div>
     </Fragment>
   )
 }
 
-export default Messages;
+const mapStateToProps = state => ({
+  channels: state.channels,
+  user: state.user,
+  messages: state.messages
+});
+
+export default connect(mapStateToProps, {
+  setMessages
+})(Messages);
