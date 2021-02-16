@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 
-const MessageItem = ({msg: {content, timestamp, user: {name, avatar}}}) => {
+const MessageItem = ({msg: {content, image, timestamp, user: {name, avatar}}}) => {
   return (
     <Fragment>
       <li className="collection-item avatar">
@@ -11,7 +11,8 @@ const MessageItem = ({msg: {content, timestamp, user: {name, avatar}}}) => {
           <strong>{name}</strong> 
           <span> <small> {moment(timestamp).fromNow()}</small></span>
         </span>
-        <p>{content}</p>        
+        <p>{content && content}</p>
+        {image && <img style={{ width: '100%', height: 'auto' }} src={image} /> }
       </li>
     </Fragment>
   )

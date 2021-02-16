@@ -1,7 +1,6 @@
 import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 import firebase from '../../firebase';
-import { connect } from 'react-redux';
 import Spinner from '../layout/Spinner';
 import M from 'materialize-css';
 import LoadingSmall from '../layout/LoadingSmall';
@@ -66,11 +65,4 @@ MessageForm.propTypes = {
   user: PropTypes.object.isRequired
 }
 
-const mapStateToProps = state => ({
-  channels: state.channels,
-  user: state.user
-});
-
-export default connect(mapStateToProps,{
-
-})(MessageForm);
+export default MessageForm;

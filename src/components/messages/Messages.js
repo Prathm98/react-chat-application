@@ -51,12 +51,6 @@ const Messages = ({channels: {currentChannel, loading}, user: {currentUser},
   )
 }
 
-const mapStateToProps = state => ({
-  channels: state.channels,
-  user: state.user,
-  messages: state.messages
-});
-
-export default connect(mapStateToProps, {
+export default connect(null, {
   setMessages
 })(Messages);
