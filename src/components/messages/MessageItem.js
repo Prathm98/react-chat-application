@@ -12,7 +12,7 @@ const MessageItem = ({msg: {content, image, timestamp, user: {name, avatar}}}) =
           <span> <small> {moment(timestamp).fromNow()}</small></span>
         </span>
         <p>{content && content}</p>
-        {image && <img style={{ width: '100%', height: 'auto' }} src={image} /> }
+        {image && <img style={{ width: '100%', height: 'auto', marginTop: '8px' }} src={image} /> }
       </li>
     </Fragment>
   )
