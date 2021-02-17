@@ -7,7 +7,6 @@ import { setMessages } from '../../actions/messages';
 
 const Messages = ({channels: {currentChannel, loading}, user: {currentUser}, 
   messages, setMessages}) => {
-  const [messageRef, setMessageRef] = useState(firebase.database().ref('messages'));
   const [userCount, setUserCount] = useState(0);
   const [messagesArr, setMessagesArr] = useState([]);
   
@@ -26,9 +25,11 @@ const Messages = ({channels: {currentChannel, loading}, user: {currentUser},
 
   const messageLoad = channelId => {
     let loadedMessages = [];    
+    let messageRef = currentChannel.isPrivateChannel ? 
+    firebase.database().ref('privatemessages') : firebase.database().ref('messages');
     messageRef.child(channelId).on('child_added', snap => {
       loadedMessages.push(snap.val());
-      setMessages(loadedMessages, channelId);      
+      setMessages(loadedMessages, channelId);
     });
   }
 
@@ -54,9 +55,10 @@ const Messages = ({channels: {currentChannel, loading}, user: {currentUser},
       <div className="row card">
         <div className="col l6 s12 m4" style={{ padding: '5px'}}>
           <div className="channel-heading">
-            {currentChannel && currentChannel.name} <i className="material-icons">star_border</i>
+          {(currentChannel && currentChannel.isPrivateChannel)? '@ ': '# '}
+          {currentChannel && currentChannel.name} <i className="material-icons">star_border</i>
           </div>
-          <span>Total Users: {userCount}</span>          
+          {currentChannel && !currentChannel.isPrivateChannel && <span>Total Users: {userCount}</span>}
         </div>
         <div className="col l6 s12 m8">
           <div className="col l10 s10 m10">

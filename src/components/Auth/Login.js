@@ -31,7 +31,7 @@ const Login = ({ user }) => {
     } else{
       try {
         let userData = await firebase.auth().signInWithEmailAndPassword(email, password);
-        console.log(userData);
+        // console.log(userData);
         // setFormData({email: '', password: ''});
       } catch (err) {
         console.error(err);

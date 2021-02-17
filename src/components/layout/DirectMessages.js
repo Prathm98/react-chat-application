@@ -2,9 +2,10 @@ import React, { Fragment, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import LoadingSmall from './LoadingSmall';
 import firebase from '../../firebase';
-import { setUser } from '../../actions/user';
+import { setChannels, setPrivateChannel } from '../../actions/channels';
+import { connect } from 'react-redux';
 
-const DirectMessages = ({user}) => {
+const DirectMessages = ({user, setPrivateChannel}) => {
   const [users, setUsers] = useState([]);
   const [activeUsers, setActiveUsers] = useState([]);
   const [presenceRef, setPresenceRef] = useState(firebase.database().ref('presence'));
@@ -21,7 +22,7 @@ const DirectMessages = ({user}) => {
       if(uid !== snap.key){
         let user = snap.val();
         user['uid'] = snap.key;
-        user['status'] = 'offline';
+        // user['status'] = 'offline';
         loadedUsers.push(user);
         setUsers(loadedUsers);
       }
@@ -66,16 +67,24 @@ const DirectMessages = ({user}) => {
     setUsers(updatedUsers);
   }
 
+  const setChannel = userObj => {
+    setPrivateChannel({
+      name: userObj.name.toUpperCase(),
+      id: userObj.uid < user.uid? user.uid+userObj.uid: userObj.uid+user.uid,
+      isPrivateChannel: true
+    });
+  }
+
   return (
     <Fragment>
       <li><a className="subheader">
         <i className="material-icons">people</i>
-        Direct Messages {users? `(${users.length})`:<LoadingSmall />}        
+        Peoples {users? `(${users.length})`:<LoadingSmall />}        
       </a></li>
       {users.length > 0 && users.map(userItem => <li key={userItem.uid} 
-        onClick={() => console.log(userItem)}
+        onClick={() => setChannel(userItem)}
         style={{opacity: '0.7', marginLeft: '15px'}}>
-        <a>{userItem.name} 
+        <a>@ {userItem.name.toUpperCase()} 
         {activeUsers.includes(userItem.uid)? 
           <i className="material-icons green-text right tiny" title="Online"
            style={{cursor: 'pointer'}}>brightness_1</i>:
@@ -87,7 +96,10 @@ const DirectMessages = ({user}) => {
 }
 
 DirectMessages.propTypes = {
-
+  user: PropTypes.object.isRequired,
+  setPrivateChannel: PropTypes.func.isRequired
 }
 
-export default DirectMessages;
+export default connect(null, {
+  setPrivateChannel
+})(DirectMessages);

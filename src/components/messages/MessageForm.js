@@ -7,7 +7,6 @@ import LoadingSmall from '../layout/LoadingSmall';
 
 const MessageForm = ({channels: {currentChannel, loading}, user}) => {
   const [message, setMessage] = useState('');
-  const [messageRef, setMessageRef] = useState(firebase.database().ref('messages'));
   const [loadingMsg, setLoadingMsg] = useState(false);  
 
   const onSubmit = async () => {
@@ -26,6 +25,8 @@ const MessageForm = ({channels: {currentChannel, loading}, user}) => {
       setLoadingMsg(true);
 
       try {
+        let messageRef = currentChannel.isPrivateChannel ? 
+          firebase.database().ref('privatemessages') : firebase.database().ref('messages');
         await messageRef.child(currentChannel.id).push().set(newMessage);
         setMessage('');    
       } catch (err) {
@@ -39,22 +40,24 @@ const MessageForm = ({channels: {currentChannel, loading}, user}) => {
   return (
     (user.loading || loading)? <Spinner />:<Fragment>
       <div className=" card col l9 m12 s12">
-        <div className="input-field col s12">
-          <i className="material-icons prefix">message</i>
-          <input name="message" id="message" type="text" className="validate"
-            required placeholder="Type something...." value={message}
-            onChange={e => setMessage(e.target.value)} />          
-          <br /> 
-          {loadingMsg ? <LoadingSmall />:
-          <button type="submit" className="waves-effect waves-light btn"
-            onClick={onSubmit}>
-            <i className="material-icons right">send</i>
-            Send
-          </button>}{' '}
-          <a className="waves-effect waves-light btn modal-trigger" href="#uploadFileModal">
-            <i className="material-icons right">attach_file</i>Upload File
-          </a>                      
-        </div>          
+        <form>
+          <div className="input-field col s12">
+            <i className="material-icons prefix">message</i>
+            <input name="message" id="message" type="text" className="validate"
+              required placeholder="Type something...." value={message}
+              onChange={e => setMessage(e.target.value)} />          
+            <br /> 
+            {loadingMsg ? <LoadingSmall />:
+            <button type="submit" className="waves-effect waves-light btn"
+              onClick={onSubmit}>
+              <i className="material-icons right">send</i>
+              Send
+            </button>}{' '}
+            <a className="waves-effect waves-light btn modal-trigger" href="#uploadFileModal">
+              <i className="material-icons right">attach_file</i>Upload File
+            </a>                      
+          </div>
+        </form>          
       </div>      
     </Fragment>
   )

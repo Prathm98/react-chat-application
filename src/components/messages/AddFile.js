@@ -8,7 +8,6 @@ import {v4} from 'uuid';
 const AddFile = ({channels:{currentChannel}, user}) => {
   const [file, setFile] = useState(null);
   const authorized = ['image/jpeg', 'image/png'];
-  const [msgRef, setMsgRef] = useState(firebase.database().ref('messages'));
   const [storageRef, setStorageRef] = useState(firebase.storage().ref());
   const [upload, setUpload] = useState({
     uploadState: '', percentageUpload: 0
@@ -29,7 +28,8 @@ const AddFile = ({channels:{currentChannel}, user}) => {
   const uploadFile = async (file, metadata) => {    
     const pathToUpload = currentChannel.id;
     const ext = file.type == "image/jpeg"? 'jpg': 'png';
-    const filePath = `chat/public/${v4()}.${ext}`;
+    const fileDir = currentChannel.isPrivateChannel? `chat/private-${pathToUpload}`: 'chat/public';
+    const filePath = `${fileDir}/${v4()}.${ext}`;
     const temp = storageRef.child(filePath).put(file);
 
     setUpload({uploadState: 'uploading', percentageUpload: 0});
@@ -66,6 +66,8 @@ const AddFile = ({channels:{currentChannel}, user}) => {
     };
 
     try {
+      let msgRef = currentChannel.isPrivateChannel ? 
+      firebase.database().ref('privatemessages') : firebase.database().ref('messages');
       await msgRef.child(pathToUpload).push().set(newMessage);
       setFile(null);        
     } catch (err) {

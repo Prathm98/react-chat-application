@@ -8,7 +8,7 @@ const MessageItem = ({msg: {content, image, timestamp, user: {name, avatar}}}) =
       <li className="collection-item avatar">
         <img src={avatar} alt="" className="circle" />
         <span className="title">
-          <strong>{name}</strong> 
+          <strong>{name.toUpperCase()}</strong> 
           <span> <small> {moment(timestamp).fromNow()}</small></span>
         </span>
         <p>{content && content}</p>
