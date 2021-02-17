@@ -6,6 +6,7 @@ import { clearUser } from "../../actions/user";
 import firebase from '../../firebase';
 import PropTypes from 'prop-types';
 import ChannelsSideNav from './ChannelsSideNav';
+import DirectMessages from './DirectMessages';
 
 const Navbar = ({ clearUser, user: {currentUser} }) => {
   const logout = async () => {
@@ -36,6 +37,7 @@ const Navbar = ({ clearUser, user: {currentUser} }) => {
           </div>
         </li>
         <ChannelsSideNav />
+        <DirectMessages user={currentUser} />
         <li><a href="#!" onClick={logout}>
           <i className="material-icons">keyboard_return</i>Sign Out
         </a></li>
