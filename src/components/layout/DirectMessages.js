@@ -56,17 +56,6 @@ const DirectMessages = ({user, setPrivateChannel}) => {
     });
   }
 
-  const addStatusToUser = (uid, connected = true) => {
-    let updatedUsers = [];
-    users.map(userItem => {      
-      if(uid === userItem.uid){
-        userItem['status'] = `${ connected ? 'online': 'offline'}`;
-      }
-      updatedUsers.push(userItem);
-    })
-    setUsers(updatedUsers);
-  }
-
   const setChannel = userObj => {
     setPrivateChannel({
       name: userObj.name.toUpperCase(),

@@ -30,6 +30,7 @@ const AddChannel = ({ user: { currentUser }}) => {
           id: key,
           name: name,
           details: details,
+          starredUsers: [],
           createdBy: {
             name: currentUser.displayName,
             avatar: currentUser.photoURL

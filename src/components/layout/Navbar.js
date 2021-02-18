@@ -36,7 +36,7 @@ const Navbar = ({ clearUser, user: {currentUser} }) => {
             <a href="#email"><span className="white-text email">View Profile</span></a>            
           </div>
         </li>
-        <ChannelsSideNav />
+        <ChannelsSideNav user={currentUser} />
         <DirectMessages user={currentUser} />
         <li><a href="#!" onClick={logout}>
           <i className="material-icons">keyboard_return</i>Sign Out

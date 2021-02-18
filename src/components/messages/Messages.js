@@ -51,13 +51,35 @@ const Messages = ({channels: {currentChannel, loading}, user: {currentUser},
     }    
   }
 
+  const starToggle = async (channelObj, cuid) => {
+    let strUsr = channelObj.starredUsers? channelObj.starredUsers: [];
+    if(strUsr.includes(cuid)){
+      strUsr.pop(cuid);
+    }else{
+      strUsr.push(cuid);
+    }
+    const newChannel = {
+      ...channelObj, 
+      starredUsers: strUsr
+    };
+    
+    await firebase.database().ref('channels').child(channelObj.id).update(newChannel);    
+  }
+
   return (
     loading? <Spinner/> :<Fragment>      
       <div className="row card" id="messageDiv">
         <div className="col l6 s12 m4" style={{ padding: '5px'}}>
           <div className="channel-heading">
           {(currentChannel && currentChannel.isPrivateChannel)? '@ ': '# '}
-          {currentChannel && currentChannel.name} <i className="material-icons">star_border</i>
+          {currentChannel && (currentChannel.name)}
+          {currentChannel && currentUser &&(<i className="material-icons" 
+            style={{cursor: 'pointer', color: 'gold'}} 
+            title={(currentChannel && currentChannel.starredUsers &&
+               !currentChannel.starredUsers.includes(currentUser.uid))? 'Add to favorite':'Remove from favorite'}
+            onClick={() => starToggle(currentChannel, currentUser.uid)} >
+            {(currentChannel && currentChannel.starredUsers &&
+               currentChannel.starredUsers.includes(currentUser.uid))? 'star':'star_border'}</i>)}
           </div>
           {currentChannel && !currentChannel.isPrivateChannel && <span>Total Users: {userCount}</span>}
         </div>

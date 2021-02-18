@@ -1,5 +1,5 @@
 import { SET_CURRENT_CHANNEL, SET_CHANNELS, SET_PRIVATE_CHANNEL,
-  SET_NOTIFY_CHANNEL, CLEAR_NOTIFY_CHANNEL } from "../actions/types";
+  SET_NOTIFY_CHANNEL, CLEAR_NOTIFY_CHANNEL, UPDATE_CHANNELS } from "../actions/types";
 
 const initialState = {
   currentChannel: null,
@@ -30,6 +30,9 @@ export default function(state=initialState, action){
         loading: false};
     case SET_CHANNELS:
       return {...state, channels: action.payload, loading: false};
+    case UPDATE_CHANNELS:
+      return {...state, channels: state.channels.map(channel => channel.id === action.payload.id? 
+        action.payload: channel), currentChannel: action.payload, loading: false};
     default:
       return state;
   }
