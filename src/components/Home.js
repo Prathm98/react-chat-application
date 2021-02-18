@@ -6,6 +6,7 @@ import AddChannel from './layout/AddChannel';
 import MessageForm from './messages/MessageForm';
 import AddFile from './messages/AddFile';
 import { connect } from 'react-redux';
+import MetaPanel from './layout/MetaPanel';
 
 const Home = ({ channels, user, messages }) => {
   useEffect(() => {
@@ -20,9 +21,8 @@ const Home = ({ channels, user, messages }) => {
           <Messages user={user} channels={channels} messages={messages} />
           </div>
           <div className="col l4 m4 s12">
-            <div className="card">
-              Abcd
-            </div>
+            {channels && messages && channels.currentChannel && 
+              <MetaPanel channels={channels} messages={messages} />}
           </div>
           <AddChannel />
         </div>
