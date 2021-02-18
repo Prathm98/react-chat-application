@@ -2,18 +2,27 @@ import React, { Fragment, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import firebase from '../../firebase';
 import { connect } from 'react-redux';
-import { setCurrentChannel, setChannels } from '../../actions/channels';
+import { setCurrentChannel, setChannels, 
+  setNotificationChannel, clearNotificationForCurrent } from '../../actions/channels';
 
-const ChannelsSideNav = ({ setCurrentChannel, setChannels, channels: {currentChannel, channels, loading} }) => {
+const ChannelsSideNav = ({ setCurrentChannel, setChannels, channels: {currentChannel, channels, 
+  loading, notifyChannels}, setNotificationChannel, clearNotificationForCurrent }) => {
   const [channelRef, setChannelRef] = useState(firebase.database().ref('channels'));
 
   useEffect(() => {
     loadChannels();
+    checkNotifications();
 
     return(() => {
       channelRef.off()
     });
   }, []);
+
+  const checkNotifications = () => {
+    firebase.database().ref('messages').on('child_changed', snap => {
+      setNotificationChannel(snap.key);
+    });
+  }
 
   const loadChannels = () => {
     let loadedChannels = [];
@@ -29,6 +38,7 @@ const ChannelsSideNav = ({ setCurrentChannel, setChannels, channels: {currentCha
   const currentChannelSet = (arr, currentLoaded) => {
     if(!currentLoaded){
       setCurrentChannel(arr[0]);
+      clearNotificationForCurrent(arr[0].id);      
     }
   }
 
@@ -42,11 +52,13 @@ const ChannelsSideNav = ({ setCurrentChannel, setChannels, channels: {currentCha
         <i className="material-icons">add</i> Add Channel
       </a></li>
       {channels.length > 0 && channels.map(channel => <li key={channel.id} 
-        onClick={() => setCurrentChannel(channel)}
+        onClick={() => {setCurrentChannel(channel); clearNotificationForCurrent(channel.id)}}
         className={(currentChannel && currentChannel.id == channel.id)? 'active': ''}
         style={{opacity: '0.7', marginLeft: '15px'}}>
         <a>
-          # {channel.name}
+          # {channel.name} 
+          {currentChannel && currentChannel.id !== channel.id && 
+            notifyChannels.includes(channel.id) && <span className="new badge blue"></span>}
         </a>
       </li>)}
     </Fragment>
@@ -64,5 +76,5 @@ const mapStateToProp = state => ({
 });
 
 export default connect(mapStateToProp, {
-  setCurrentChannel, setChannels
+  setCurrentChannel, setChannels, setNotificationChannel, clearNotificationForCurrent
 })(ChannelsSideNav);

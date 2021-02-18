@@ -13,7 +13,8 @@ const Messages = ({channels: {currentChannel, loading}, user: {currentUser},
   useEffect(() => {    
     if(currentChannel && currentUser){
       messageLoad(currentChannel.id);
-    }    
+    }
+        
   }, [currentChannel]);
 
   useEffect(() => {
@@ -33,7 +34,7 @@ const Messages = ({channels: {currentChannel, loading}, user: {currentUser},
     });
   }
 
-  const searchMessages = searchTerm => {    
+  const searchMessages = searchTerm => {
     if((searchTerm.trim()).length > 0){
       searchTerm = searchTerm.trim();
       const regex = new RegExp(searchTerm, 'gi');
@@ -52,7 +53,7 @@ const Messages = ({channels: {currentChannel, loading}, user: {currentUser},
 
   return (
     loading? <Spinner/> :<Fragment>      
-      <div className="row card">
+      <div className="row card" id="messageDiv">
         <div className="col l6 s12 m4" style={{ padding: '5px'}}>
           <div className="channel-heading">
           {(currentChannel && currentChannel.isPrivateChannel)? '@ ': '# '}
