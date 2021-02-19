@@ -26,8 +26,10 @@ const Login = ({ user }) => {
     if(email === null || email === undefined || (email.trim()).length < 1 || 
       password === null || password === undefined || (password.trim()).length < 1){
       setErrors({type: 'danger', error: ['All Fields are required!!!']});
+      setLoading(false);
     }else if ((password.trim()).length < 6) {
       setErrors({type: 'danger', error: ['Password should contain atleast 6 characters']});
+      setLoading(false);
     } else{
       try {
         let userData = await firebase.auth().signInWithEmailAndPassword(email, password);
@@ -36,9 +38,9 @@ const Login = ({ user }) => {
       } catch (err) {
         console.error(err);
         setErrors({type: 'danger', error: [err.message]});
+        setLoading(false);
       }
-    }
-    setLoading(false);
+    }    
   }
   
   if(!user.loading && user.currentUser){

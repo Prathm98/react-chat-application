@@ -81,7 +81,9 @@ const Messages = ({channels: {currentChannel, loading}, user: {currentUser},
             {(currentChannel && currentChannel.starredUsers &&
                currentChannel.starredUsers.includes(currentUser.uid))? 'star':'star_border'}</i>)}
           </div>
-          {currentChannel && !currentChannel.isPrivateChannel && <span>Total Users: {userCount}</span>}
+          {currentChannel && !currentChannel.isPrivateChannel && <span>
+            Total Users: {(currentChannel && currentChannel.id == messages.channelId &&
+            messages.messages.length > 0) ? userCount : '0'}</span>}
         </div>
         <div className="col l6 s12 m8">
           <div className="col l10 s10 m10">

@@ -44,6 +44,11 @@ const Navbar = ({ clearUser, user: {currentUser, loading}, colors }) => {
           <li><a style={{color: colors.Links? colors.Links: '#000000'}} href="#!" onClick={logout}>
             <i style={{color: colors.Links? colors.Links: '#000000'}} className="material-icons">keyboard_return</i>Sign Out
           </a></li>
+          <li><div className="divider"></div></li>
+          <li><a style={{color: colors.Links? colors.Links: '#000000'}} 
+            href="https://github.com/Prathm98/react-chat-application" target="_blank">
+            <i style={{color: colors.Links? colors.Links: '#000000'}} className="material-icons">info</i>About Chat App
+          </a></li>
         </div>
       </ul>
       

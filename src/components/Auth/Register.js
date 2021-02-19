@@ -31,10 +31,13 @@ const Register = ({ user}) => {
       password === null || password === undefined || (password.trim()).length < 1 ||
       password2 === null || password2 === undefined || (password2.trim()).length < 1){
       setErrors({type: 'danger', error: ['All Fields are required!!!']});
+      setLoading(false);
     }else if ((password.trim()).length < 6) {
       setErrors({type: 'danger', error: ['Password should contain atleast 6 characters']});
+      setLoading(false);
     } else if((password.trim()) !== (password2.trim())){
       setErrors({type: 'danger', error: ['Password doesn\'t match']});
+      setLoading(false);
     }else{
       try {
         let userData = await firebase.auth().createUserWithEmailAndPassword(email, password);
@@ -46,14 +49,14 @@ const Register = ({ user}) => {
         });
         // console.log(userData);
         saveUser(userData.user);
-        setErrors({type: 'success', error: ['User Registered Successfully']});
-        setFormData({name: '', email: '', password: '', password2: ''});
+        // setErrors({type: 'success', error: ['User Registered Successfully']});
+        // setFormData({name: '', email: '', password: '', password2: ''});
       } catch (err) {
         console.error(err);
-        setErrors({type: 'danger', error: [err.message]});      
+        setErrors({type: 'danger', error: [err.message]});
+        setLoading(false);    
       }
-    }
-    setLoading(false); 
+    }    
   }
 
   const saveUser = user => {
