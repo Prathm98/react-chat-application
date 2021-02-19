@@ -1,7 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import M from 'materialize-css';
-import mime from 'mime-types';
 import firebase from '../../firebase';
 import {v4} from 'uuid';
 
@@ -16,8 +15,7 @@ const AddFile = ({channels:{currentChannel}, user}) => {
   const sendFile = () => {
     if(file){
       if(authorized.includes(file.type)){
-        const metadata = {contentType: file.type};
-        // Call to upload function
+        const metadata = {contentType: file.type};        
         uploadFile(file, metadata);
       }
     }else{
@@ -94,7 +92,8 @@ const AddFile = ({channels:{currentChannel}, user}) => {
                 <input type="file" onChange={e => setFile(e.target.files[0])} />
               </div>
               <div className="file-path-wrapper">
-                <input className="file-path validate" type="text" value={file ? file.name? file.name: '': ''} readOnly />
+                <input className="file-path validate" type="text" 
+                  value={file ? file.name? file.name: '': ''} readOnly />
               </div>
             </div>
           </form>}
@@ -109,7 +108,8 @@ const AddFile = ({channels:{currentChannel}, user}) => {
 }
 
 AddFile.propTypes = {
-  channels: PropTypes.object.isRequired
+  channels: PropTypes.object.isRequired,
+  user: PropTypes.object.isRequired
 }
 
 export default AddFile;

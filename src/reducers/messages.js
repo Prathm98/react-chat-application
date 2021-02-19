@@ -9,8 +9,12 @@ const initialState = {
 export default function(state=initialState, action){
   switch (action.type) {
     case SET_MESSAGES:
-      return {...state, messages: action.payload.messages, 
-        channelId: action.payload.channelId, loading: false};
+      return {
+        ...state, 
+        messages: action.payload.messages, 
+        channelId: action.payload.channelId, 
+        loading: false };
+        
     default:
       return state;
   }

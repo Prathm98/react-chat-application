@@ -4,6 +4,7 @@ import Spinner from '../layout/Spinner';
 import MessageItem from './MessageItem';
 import firebase from '../../firebase';
 import { setMessages } from '../../actions/messages';
+import PropTypes from 'prop-types';
 
 const Messages = ({channels: {currentChannel, loading}, user: {currentUser}, 
   messages, setMessages}) => {
@@ -27,7 +28,8 @@ const Messages = ({channels: {currentChannel, loading}, user: {currentUser},
   const messageLoad = channelId => {
     let loadedMessages = [];    
     let messageRef = currentChannel.isPrivateChannel ? 
-    firebase.database().ref('privatemessages') : firebase.database().ref('messages');
+      firebase.database().ref('privatemessages') : firebase.database().ref('messages');
+
     messageRef.child(channelId).on('child_added', snap => {
       loadedMessages.push(snap.val());
       setMessages(loadedMessages, channelId);
@@ -40,7 +42,6 @@ const Messages = ({channels: {currentChannel, loading}, user: {currentUser},
       const regex = new RegExp(searchTerm, 'gi');
       const result = [];
       messages.messages.map(msg => {
-        // console.log(msg);
         if(msg.content && msg.content.match(regex)){
           result.push(msg);
         }
@@ -67,23 +68,30 @@ const Messages = ({channels: {currentChannel, loading}, user: {currentUser},
   }
 
   return (
-    loading? <Spinner/> :<Fragment>      
+    loading? <Spinner/> :
+    <Fragment>      
       <div className="row card" id="messageDiv">
         <div className="col l6 s12 m4" style={{ padding: '5px'}}>
           <div className="channel-heading">
-          {(currentChannel && currentChannel.isPrivateChannel)? '@ ': '# '}
-          {currentChannel && (currentChannel.name)}
-          {currentChannel && currentUser &&(<i className="material-icons" 
-            style={{cursor: 'pointer', color: 'gold'}} 
-            title={(currentChannel && currentChannel.starredUsers &&
-               !currentChannel.starredUsers.includes(currentUser.uid))? 'Add to favorite':'Remove from favorite'}
-            onClick={() => starToggle(currentChannel, currentUser.uid)} >
-            {(currentChannel && currentChannel.starredUsers &&
-               currentChannel.starredUsers.includes(currentUser.uid))? 'star':'star_border'}</i>)}
+            {(currentChannel && currentChannel.isPrivateChannel)? '@ ': '# '}
+            {currentChannel && (currentChannel.name)}
+            {currentChannel && currentUser && !currentChannel.isPrivateChannel &&(
+              <i className="material-icons" 
+                style={{cursor: 'pointer', color: 'gold'}} 
+                title={(currentChannel && currentChannel.starredUsers &&
+                !currentChannel.starredUsers.includes(currentUser.uid))? 
+                  'Add to favorite':'Remove from favorite'}
+                onClick={() => starToggle(currentChannel, currentUser.uid)} >
+                  {(currentChannel && currentChannel.starredUsers &&
+                    currentChannel.starredUsers.includes(currentUser.uid))? 'star':'star_border'}
+              </i>)}
           </div>
-          {currentChannel && !currentChannel.isPrivateChannel && <span>
-            Total Users: {(currentChannel && currentChannel.id == messages.channelId &&
-            messages.messages.length > 0) ? userCount : '0'}</span>}
+
+          {currentChannel && !currentChannel.isPrivateChannel && 
+            <span>
+              Total Users: {(currentChannel && currentChannel.id == messages.channelId &&
+              messages.messages.length > 0) ? userCount : '0'}
+            </span>}
         </div>
         <div className="col l6 s12 m8">
           <div className="col l10 s10 m10">
@@ -94,22 +102,30 @@ const Messages = ({channels: {currentChannel, loading}, user: {currentUser},
           </div>
         </div>          
       </div>
+
       <div className="row">
         <div className="card" style={{minHeight: '400px', padding: '5px'}}>              
           {messages.messages.loading? 
             <Spinner />: 
             (currentChannel && currentChannel.id == messages.channelId &&
-            messages.messages.length > 0)?
-              messagesArr.length > 0?
-                <ul className="collection">
-                  {messagesArr.map((msg, index) => <MessageItem key={index} msg={msg} />)}
-                </ul>: <h5>No match found</h5>
-              : <h5>No Messages Posted yet</h5>}
+              messages.messages.length > 0)?
+                messagesArr.length > 0?
+                  <ul className="collection">
+                    {messagesArr.map((msg, index) => <MessageItem key={index} msg={msg} />)}
+                  </ul>: <h5>No match found</h5>
+                : <h5>No Messages Posted yet</h5>}
         </div>
       </div>
     </Fragment>
   )
 }
+
+Messages.protoType = {
+  channels: PropTypes.object.isRequired,
+  user: PropTypes.object.isRequired,
+  messages: PropTypes.object.isRequired,
+  setMessages: PropTypes.func.isRequired
+};
 
 export default connect(null, {
   setMessages

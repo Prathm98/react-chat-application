@@ -19,7 +19,7 @@ const MessageItem = ({msg: {content, image, timestamp, user: {name, avatar}}}) =
 }
 
 MessageItem.propTypes = {
-
+  msg: PropTypes.object.isRequired
 }
 
 export default MessageItem;

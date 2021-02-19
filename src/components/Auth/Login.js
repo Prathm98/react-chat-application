@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 const Login = ({ user }) => {
   const [formData, setFormData] = useState({
     email: '', password: ''
-  });
+  });  
   const [errors, setErrors] = useState({type: 'danger', error: []});
   const [loading, setLoading] = useState(false);  
 
@@ -17,29 +17,34 @@ const Login = ({ user }) => {
 
   const { email, password } = formData;
 
-  const onSubmit = async (e) => {
-    
-    e.preventDefault();
-    setErrors({type:'danger', error:[]});
-    setLoading(true);
-
-    if(email === null || email === undefined || (email.trim()).length < 1 || 
-      password === null || password === undefined || (password.trim()).length < 1){
+  const validateForm = (emailVal, passwordVal) => {
+    if(emailVal === null || emailVal === undefined || (emailVal.trim()).length < 1 || 
+    passwordVal === null || passwordVal === undefined || (passwordVal.trim()).length < 1){
       setErrors({type: 'danger', error: ['All Fields are required!!!']});
       setLoading(false);
     }else if ((password.trim()).length < 6) {
       setErrors({type: 'danger', error: ['Password should contain atleast 6 characters']});
       setLoading(false);
-    } else{
+    }else{
+      return true;
+    }
+    return false;
+  }
+
+  const onSubmit = async (e) => {    
+    e.preventDefault();
+    setErrors({type:'danger', error:[]});
+    setLoading(true);
+
+    if(validateForm(email, password)){       
       try {
-        let userData = await firebase.auth().signInWithEmailAndPassword(email, password);
-        // console.log(userData);
-        // setFormData({email: '', password: ''});
+        await firebase.auth().signInWithEmailAndPassword(email, password);        
       } catch (err) {
         console.error(err);
         setErrors({type: 'danger', error: [err.message]});
         setLoading(false);
       }
+      
     }    
   }
   

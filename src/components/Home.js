@@ -7,8 +7,8 @@ import MessageForm from './messages/MessageForm';
 import AddFile from './messages/AddFile';
 import { connect } from 'react-redux';
 import MetaPanel from './layout/MetaPanel';
-import firebase from '../firebase';
 import Spinner from './layout/Spinner';
+import ChnageAvatar from './layout/ChangeAvatar';
 
 const Home = ({ channels, user, messages }) => {
   useEffect(() => {
@@ -16,23 +16,33 @@ const Home = ({ channels, user, messages }) => {
   }, []);  
   
   return (
-    (channels.loading && user.loading && messages.loading)? <Spinner/> : <Fragment>
+    (channels.loading && user.loading && messages.loading)? <Spinner/> : 
+    <Fragment>
       <Navbar colors={user.colors} />
-      <div className="message-sidenav" style={{backgroundColor: user.colors? user.colors.Background: '#f333f3', paddingBottom: '100px' }}>
+      <div className="message-sidenav" 
+        style={{backgroundColor: user.colors? user.colors.Background: '#f333f3', paddingBottom: '100px' }}>
         <div className="row">
           <div className="col l8 m8 s12">
-          <Messages user={user} channels={channels} messages={messages} />
+            <Messages user={user} channels={channels} messages={messages} />          
           </div>
+
           <div className="col l4 m4 s12">          
             {channels && messages && channels.currentChannel && 
-              <MetaPanel channels={channels} messages={messages} user={user} />}
+              <MetaPanel channels={channels} user={user} />}
           </div>
           <AddChannel />
-        </div>        
-        <div className="row" style={{
-          padding: '0%', position: 'fixed', bottom: '0', width: '100%', marginBottom: '0'
-        }}>
-        <MessageForm user={user} channels={channels} />
+          <ChnageAvatar />
+        </div>
+
+        <div className="row" 
+          style={{ 
+            padding: '0%', 
+            position: 'fixed', 
+            bottom: '0', 
+            width: '100%', 
+            marginBottom: '0'
+          }}>
+          <MessageForm user={user} channels={channels} />
         </div>  
       </div>      
       { channels && user && <AddFile channels={channels} user={user} /> }

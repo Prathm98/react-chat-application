@@ -11,9 +11,17 @@ const initialState = {
 export default function(state=initialState, action){
   switch (action.type) {
     case SET_CURRENT_CHANNEL:
-      return {...state, currentChannel: {...action.payload, isPrivateChannel: false}, loading: false};
+      return {
+        ...state, 
+        currentChannel: {...action.payload, isPrivateChannel: false}, 
+        loading: false };
+
     case SET_PRIVATE_CHANNEL:
-      return {...state, currentChannel: action.payload, loading: false};
+      return {
+        ...state, 
+        currentChannel: action.payload, 
+        loading: false };
+
     case SET_NOTIFY_CHANNEL:
       if(state.notifyChannels.includes(action.payload)){
         return state;
@@ -21,18 +29,34 @@ export default function(state=initialState, action){
       if(state.currentChannel && state.currentChannel.id == action.payload){
         return state;
       }
-      return {...state, notifyChannels: [...state.notifyChannels, action.payload], loading: false};
+      return {
+        ...state, 
+        notifyChannels: [...state.notifyChannels, action.payload], 
+        loading: false };
+
     case CLEAR_NOTIFY_CHANNEL:
       if(!state.notifyChannels.includes(action.payload)){
         return state;
       }
-      return {...state, notifyChannels: state.notifyChannels.filter(channel => channel != action.payload), 
-        loading: false};
+      return {
+        ...state, 
+        notifyChannels: state.notifyChannels.filter(channel => channel != action.payload), 
+        loading: false };
+
     case SET_CHANNELS:
-      return {...state, channels: action.payload, loading: false};
+      return {
+        ...state, 
+        channels: action.payload, 
+        loading: false };
+
     case UPDATE_CHANNELS:
-      return {...state, channels: state.channels.map(channel => channel.id === action.payload.id? 
-        action.payload: channel), currentChannel: action.payload, loading: false};
+      return {
+        ...state, 
+        channels: state.channels.map(channel => 
+          channel.id === action.payload.id?action.payload: channel), 
+        currentChannel: action.payload, 
+        loading: false };
+        
     default:
       return state;
   }

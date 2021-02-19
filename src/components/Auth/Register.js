@@ -8,7 +8,6 @@ import PropTypes from 'prop-types';
 import Spinner from '../layout/Spinner';
 
 const Register = ({ user}) => {
-
   const [formData, setFormData] = useState({
     name:'', email: '', password: '', password2: ''
   });
@@ -20,25 +19,31 @@ const Register = ({ user}) => {
 
   const { name, email, password, password2 } = formData;
 
-  const onSubmit = async (e) => {
-    
+  const validateForm = (nameVal, emailVal, passwordVal, passwordVal2) => {
+    if(nameVal === null || nameVal === undefined || (nameVal.trim()).length < 1 ||
+      emailVal === null || emailVal === undefined || (emailVal.trim()).length < 1 || 
+      passwordVal === null || passwordVal === undefined || (passwordVal.trim()).length < 1 ||
+      passwordVal2 === null || passwordVal2 === undefined || (passwordVal2.trim()).length < 1){
+      setErrors({type: 'danger', error: ['All Fields are required!!!']});
+      setLoading(false);
+    }else if ((passwordVal.trim()).length < 6) {
+      setErrors({type: 'danger', error: ['Password should contain atleast 6 characters']});
+      setLoading(false);
+    } else if((passwordVal.trim()) !== (passwordVal2.trim())){
+      setErrors({type: 'danger', error: ['Password doesn\'t match']});
+      setLoading(false);
+    }else{
+      return true;
+    }
+    return false;
+  }
+
+  const onSubmit = async (e) => {    
     e.preventDefault();
     setErrors({type:'danger', error:[]});
     setLoading(true);
 
-    if(name === null || name === undefined || (name.trim()).length < 1 ||
-      email === null || email === undefined || (email.trim()).length < 1 || 
-      password === null || password === undefined || (password.trim()).length < 1 ||
-      password2 === null || password2 === undefined || (password2.trim()).length < 1){
-      setErrors({type: 'danger', error: ['All Fields are required!!!']});
-      setLoading(false);
-    }else if ((password.trim()).length < 6) {
-      setErrors({type: 'danger', error: ['Password should contain atleast 6 characters']});
-      setLoading(false);
-    } else if((password.trim()) !== (password2.trim())){
-      setErrors({type: 'danger', error: ['Password doesn\'t match']});
-      setLoading(false);
-    }else{
+    if(validateForm(name, email, password, password2)){
       try {
         let userData = await firebase.auth().createUserWithEmailAndPassword(email, password);
         await userData.user.updateProfile({
@@ -46,11 +51,8 @@ const Register = ({ user}) => {
           photoURL: `http://gravatar.com/avatar/${md5(
             userData.user.email
           )}?d=identicon`
-        });
-        // console.log(userData);
-        saveUser(userData.user);
-        // setErrors({type: 'success', error: ['User Registered Successfully']});
-        // setFormData({name: '', email: '', password: '', password2: ''});
+        });       
+        saveUser(userData.user);        
       } catch (err) {
         console.error(err);
         setErrors({type: 'danger', error: [err.message]});
