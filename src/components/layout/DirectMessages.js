@@ -3,9 +3,10 @@ import PropTypes from 'prop-types';
 import LoadingSmall from './LoadingSmall';
 import firebase from '../../firebase';
 import { setChannels, setPrivateChannel } from '../../actions/channels';
+import { setColor } from '../../actions/user';
 import { connect } from 'react-redux';
 
-const DirectMessages = ({user, setPrivateChannel}) => {
+const DirectMessages = ({user, setPrivateChannel, setColor, colors}) => {
   const [users, setUsers] = useState([]);
   const [activeUsers, setActiveUsers] = useState([]);
   const [presenceRef, setPresenceRef] = useState(firebase.database().ref('presence'));
@@ -25,6 +26,9 @@ const DirectMessages = ({user, setPrivateChannel}) => {
         // user['status'] = 'offline';
         loadedUsers.push(user);
         setUsers(loadedUsers);
+      }else{
+        let user = snap.val();
+        setColor(user.colors);
       }
     });
 
@@ -66,16 +70,16 @@ const DirectMessages = ({user, setPrivateChannel}) => {
 
   return (
     <Fragment>
-      <li><a className="subheader">
-        <i className="material-icons">people</i>
+      <li><a style={{color: (colors && colors.Links) ? colors.Links: '#000000'}} className="subheader">
+        <i style={{color: (colors && colors.Links) ? colors.Links: '#000000'}} className="material-icons">people</i>
         Peoples {users? `(${users.length})`:<LoadingSmall />}        
       </a></li>
       {users.length > 0 && users.map(userItem => <li key={userItem.uid} 
         onClick={() => setChannel(userItem)}
         style={{opacity: '0.7', marginLeft: '15px'}}>
-        <a>@ {userItem.name.toUpperCase()} 
+        <a style={{color: (colors && colors.Links) ? colors.Links: '#000000'}}>@ {userItem.name.toUpperCase()} 
         {activeUsers.includes(userItem.uid)? 
-          <i className="material-icons green-text right tiny" title="Online"
+          <i style={{color: (colors && colors.Links) ? colors.Links: '#000000'}} className="material-icons green-text right tiny" title="Online"
            style={{cursor: 'pointer'}}>brightness_1</i>:
           <i className="material-icons red-text right tiny" title="Offline"
            style={{cursor: 'pointer'}}>brightness_1</i>}</a>
@@ -90,5 +94,5 @@ DirectMessages.propTypes = {
 }
 
 export default connect(null, {
-  setPrivateChannel
+  setPrivateChannel, setColor
 })(DirectMessages);

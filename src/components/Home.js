@@ -7,31 +7,34 @@ import MessageForm from './messages/MessageForm';
 import AddFile from './messages/AddFile';
 import { connect } from 'react-redux';
 import MetaPanel from './layout/MetaPanel';
+import firebase from '../firebase';
+import Spinner from './layout/Spinner';
 
 const Home = ({ channels, user, messages }) => {
   useEffect(() => {
-    M.AutoInit();
-  }, []);
+    M.AutoInit();    
+  }, []);  
+  
   return (
-    <Fragment>
-      <Navbar />
-      <div className="message-sidenav">
+    (channels.loading && user.loading && messages.loading)? <Spinner/> : <Fragment>
+      <Navbar colors={user.colors} />
+      <div className="message-sidenav" style={{backgroundColor: user.colors? user.colors.Background: '#f333f3', paddingBottom: '100px' }}>
         <div className="row">
           <div className="col l8 m8 s12">
           <Messages user={user} channels={channels} messages={messages} />
           </div>
-          <div className="col l4 m4 s12">
+          <div className="col l4 m4 s12">          
             {channels && messages && channels.currentChannel && 
-              <MetaPanel channels={channels} messages={messages} />}
+              <MetaPanel channels={channels} messages={messages} user={user} />}
           </div>
           <AddChannel />
-        </div>
+        </div>        
         <div className="row" style={{
           padding: '0%', position: 'fixed', bottom: '0', width: '100%', marginBottom: '0'
         }}>
         <MessageForm user={user} channels={channels} />
         </div>  
-      </div>
+      </div>      
       { channels && user && <AddFile channels={channels} user={user} /> }
     </Fragment>
   )

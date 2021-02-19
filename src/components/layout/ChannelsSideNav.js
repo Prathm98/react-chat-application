@@ -6,7 +6,7 @@ import { setCurrentChannel, setChannels, updateChannels,
   setNotificationChannel, clearNotificationForCurrent } from '../../actions/channels';
 
 const ChannelsSideNav = ({ setCurrentChannel, setChannels, channels: {currentChannel, channels, 
-  loading, notifyChannels}, setNotificationChannel, clearNotificationForCurrent, updateChannels, user }) => {
+  loading, notifyChannels}, colors, setNotificationChannel, clearNotificationForCurrent, updateChannels, user }) => {
   const [channelRef, setChannelRef] = useState(firebase.database().ref('channels'));
 
   useEffect(() => {
@@ -48,8 +48,8 @@ const ChannelsSideNav = ({ setCurrentChannel, setChannels, channels: {currentCha
 
   return (
     <Fragment>
-      <li><a className="subheader">
-        <i className="material-icons">star</i>
+      <li><a style={{color: (colors && colors.Links) ? colors.Links: '#000000'}} className="subheader">
+        <i style={{color: (colors && colors.Links) ? colors.Links: '#000000'}} className="material-icons">star</i>
         Starred
       </a></li>
       {user && channels.length > 0 && channels.map(channel => channel.starredUsers && 
@@ -57,7 +57,7 @@ const ChannelsSideNav = ({ setCurrentChannel, setChannels, channels: {currentCha
         onClick={() => {setCurrentChannel(channel); clearNotificationForCurrent(channel.id)}}
         className={(currentChannel && currentChannel.id == channel.id)? 'active': ''}
         style={{opacity: '0.7', marginLeft: '15px'}}>
-        <a>
+        <a style={{color: (colors && colors.Links) ? colors.Links: '#000000'}}>
           # {channel.name} 
           {currentChannel && currentChannel.id !== channel.id && 
             notifyChannels.includes(channel.id) && <span className="new badge blue"></span>}
@@ -65,18 +65,18 @@ const ChannelsSideNav = ({ setCurrentChannel, setChannels, channels: {currentCha
       </li>)}
 
       <li><div className="divider"></div></li>
-      <li><a className="subheader">
-        <i className="material-icons">group_work</i>
+      <li><a style={{color: (colors && colors.Links) ? colors.Links: '#000000'}} className="subheader">
+        <i style={{color: (colors && colors.Links) ? colors.Links: '#000000'}} className="material-icons">group_work</i>
         Channels ({channels.length})
       </a></li>
-      <li><a href="#addChannelModal" className="modal-trigger">
-        <i className="material-icons">add</i> Add Channel
+      <li><a style={{color: (colors && colors.Links) ? colors.Links: '#000000'}} href="#addChannelModal" className="modal-trigger">
+        <i style={{color: (colors && colors.Links) ? colors.Links: '#000000'}} className="material-icons">add</i> Add Channel
       </a></li>
       {channels.length > 0 && channels.map(channel => <li key={channel.id} 
         onClick={() => {setCurrentChannel(channel); clearNotificationForCurrent(channel.id)}}
         className={(currentChannel && currentChannel.id == channel.id)? 'active': ''}
         style={{opacity: '0.7', marginLeft: '15px'}}>
-        <a>
+        <a style={{color: (colors && colors.Links) ? colors.Links: '#000000'}}>
           # {channel.name} 
           {currentChannel && currentChannel.id !== channel.id && 
             notifyChannels.includes(channel.id) && <span className="new badge blue"></span>}
@@ -93,7 +93,8 @@ ChannelsSideNav.propTypes = {
   updateChannels: PropTypes.func.isRequired,
   setNotificationChannel: PropTypes.func.isRequired,
   clearNotificationForCurrent: PropTypes.func.isRequired,
-  user: PropTypes.object.isRequired
+  user: PropTypes.object.isRequired,
+  colors: PropTypes.object.isRequired
 }
 
 const mapStateToProp = state => ({

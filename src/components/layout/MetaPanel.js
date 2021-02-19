@@ -2,28 +2,38 @@ import React, { Fragment, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import M from 'materialize-css';
 import Spinner from './Spinner';
+import { setColor } from '../../actions/user';
+import firebase from '../../firebase';
+import { connect } from 'react-redux';
 
-const MetaPanel = ({messages:{messages, loading}, channels}) => {
-  // const [topPoster, setTopPoster] = useState({});
-  
+const MetaPanel = ({messages:{messages, loading}, channels, user, setColor}) => {
+  const [topPoster, setTopPoster] = useState({});
+  const [colors, setColors] = useState({
+    Sidebar: '#ffffff', Links: '#000000', Background: '#f3f3f3'
+  });
+
   useEffect(() => {
     M.AutoInit();
-    // if(messages){
-    //   setTopPoster(messages.reduce((acc, msg) => {
-    //     if(msg.user.name in acc){
-    //       acc[msg.user.name].count += 1;
-    //     }else{
-    //       acc[msg.user.name] = {
-    //         avatar: msg.user.avatar,
-    //         count: 1
-    //       }
-    //     }
-    //     return acc;
-    //   }, {}));
-      // console.log(topPoster);
-    // }
-  }, []);  
+    if(user && user.colors){
+      setColors(user.colors);
+    }
+  }, []);
   
+  useEffect(() => {
+    if(user && user.colors){
+      setColors(user.colors);
+    }
+  }, [user]);
+  
+  const setColorLocal = () => {    
+    firebase.database().ref('users').child(user.currentUser.uid).update({
+      uid: user.currentUser.uid,
+      avatar: user.currentUser.photoURL,
+      colors: colors
+    });
+    setColor(colors);
+  }
+
   return (
     (loading && channels.loading) ? <Spinner />:<Fragment>    
       <ul className="collapsible">
@@ -33,14 +43,8 @@ const MetaPanel = ({messages:{messages, loading}, channels}) => {
           <div className="collapsible-body"><span>
             {channels.currentChannel && channels.currentChannel.details}</span></div>
         </li>
-        {/* <li key='1'>
-          <div className="collapsible-header"><i className="material-icons">timeline</i>Top Poster</div>
-          <div className="collapsible-body">
-            {topPoster.length > 0 && Object.entries(topPoster)
-              .map( ([key, value]) => <span>{key}</span> )}
-          </div>
-        </li> */}
-        <li key='2'>
+
+        {channels.currentChannel && channels.currentChannel.createdBy && <li key='2'>
           <div className="collapsible-header"><i className="material-icons">border_color</i>
             Created By</div>
           <div className="collapsible-body"><span>
@@ -50,6 +54,21 @@ const MetaPanel = ({messages:{messages, loading}, channels}) => {
                 <strong>{channels.currentChannel.createdBy.name.toUpperCase()}</strong>                 
               </span>
             </li></ul>}
+          </span></div>
+        </li>}
+
+        <li>
+          <div className="collapsible-header">
+            <i className="material-icons">colorize</i>Choose colors          
+          </div>
+          <div className="collapsible-body"><span>
+            <input type="color" value={colors.Sidebar} 
+              onChange={e => setColors({...colors, Sidebar: e.target.value})}/> SideBar <br /><br />
+            <input type="color" value={colors.Links} 
+              onChange={e => setColors({...colors, Links: e.target.value})}/> Links <br /><br />
+            <input type="color" value={colors.Background} 
+              onChange={e => setColors({...colors, Background: e.target.value})}/> Background <br /><br />
+            <button className="btn" onClick={setColorLocal}>Set Color</button>
           </span></div>
         </li>
       </ul>        
@@ -62,4 +81,4 @@ MetaPanel.propTypes = {
   channels: PropTypes.object.isRequired
 }
 
-export default MetaPanel;
+export default connect(null, {setColor})(MetaPanel);

@@ -7,8 +7,9 @@ import firebase from '../../firebase';
 import PropTypes from 'prop-types';
 import ChannelsSideNav from './ChannelsSideNav';
 import DirectMessages from './DirectMessages';
+import Spinner from './Spinner';
 
-const Navbar = ({ clearUser, user: {currentUser} }) => {
+const Navbar = ({ clearUser, user: {currentUser, loading}, colors }) => {
   const logout = async () => {
     try {
       await firebase.auth().signOut();
@@ -20,13 +21,14 @@ const Navbar = ({ clearUser, user: {currentUser} }) => {
   }
 
   return (
-    <div>
-      <ul id="slide-out" className="sidenav sidenav-fixed">
+    loading && colors ? <Spinner /> :
+    <div>      
+      <ul id="slide-out" className="sidenav sidenav-fixed">                 
         <li>
-          <div className="user-view">
-            <div className="background">
+          <div className="user-view" style={{marginBottom: '0'}}>
+            <div className="background" style={{backgroundImage: `url(${background})`}}>
               <img src={background} />
-            </div>
+            </div>            
             <Link to="/" className="brand-logo center white-text">
               <i className="material-icons white-text medium center">whatshot</i>
             </Link>
@@ -36,13 +38,15 @@ const Navbar = ({ clearUser, user: {currentUser} }) => {
             <a href="#email"><span className="white-text email">View Profile</span></a>            
           </div>
         </li>
-        <ChannelsSideNav user={currentUser} />
-        <DirectMessages user={currentUser} />
-        <li><a href="#!" onClick={logout}>
-          <i className="material-icons">keyboard_return</i>Sign Out
-        </a></li>
+        <div style={{backgroundColor: colors.Sidebar? colors.Sidebar: '#f3f3f3'}}>
+          <ChannelsSideNav user={currentUser} colors={colors} />
+          <DirectMessages user={currentUser} colors={colors} />        
+          <li><a style={{color: colors.Links? colors.Links: '#000000'}} href="#!" onClick={logout}>
+            <i style={{color: colors.Links? colors.Links: '#000000'}} className="material-icons">keyboard_return</i>Sign Out
+          </a></li>
+        </div>
       </ul>
-
+      
       <nav className="hide-on-large-only">
         <div className="nav-wrapper" style={{
           backgroundImage: `url(${background})`, 

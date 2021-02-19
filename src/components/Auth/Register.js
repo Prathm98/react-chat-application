@@ -59,7 +59,8 @@ const Register = ({ user}) => {
   const saveUser = user => {
     return userRef.child(user.uid).set({
       name: user.displayName,
-      avatar: user.photoURL
+      avatar: user.photoURL,
+      colors: {Sidebar: '#ffffff', Links: '#000000', Background: '#f3f3f3'}
     });
   }
 
