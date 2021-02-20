@@ -8,4 +8,5 @@ export const CLEAR_NOTIFY_CHANNEL = "CLEAR_NOTIFY_CHANNEL";
 export const SET_CHANNELS = "SET_CHANNELS";
 export const UPDATE_CHANNELS = "UPDATE_CHANNELS";
 export const SET_MESSAGES = "SET_MESSAGES";
+export const SET_TYPING = "SET_TYPING";
 export const SET_COLORS = "SET_COLORS";

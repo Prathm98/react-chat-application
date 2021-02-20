@@ -4,6 +4,7 @@ import firebase from '../../firebase';
 import { connect } from 'react-redux';
 import { setCurrentChannel, setChannels, updateChannels,
   setNotificationChannel, clearNotificationForCurrent } from '../../actions/channels';
+import { setTyping } from '../../actions/messages';
 import Spinner from './Spinner';
 
 const ChannelsSideNav = ({ 
@@ -13,7 +14,8 @@ const ChannelsSideNav = ({
   setNotificationChannel, 
   clearNotificationForCurrent, 
   updateChannels, 
-  user, 
+  user,
+  setTyping,
   channels: {
     currentChannel, 
     channels, 
@@ -57,8 +59,18 @@ const ChannelsSideNav = ({
   const currentChannelSet = (arr, currentLoaded) => {
     if(!currentLoaded){
       setCurrentChannel(arr[0]);
-      clearNotificationForCurrent(arr[0].id);      
+      clearNotificationForCurrent(arr[0].id);
+      firebase.database().ref('typing')
+        .child(arr[0].id).child(user.uid).remove();
     }
+  }
+
+  const setCurrentChannelLocal = (channelObj) => {
+    setTyping([]);
+    firebase.database().ref('typing')
+      .child(currentChannel.id).child(user.uid).remove();
+    setCurrentChannel(channelObj);
+    clearNotificationForCurrent(channelObj.id);
   }
 
   return (
@@ -73,7 +85,7 @@ const ChannelsSideNav = ({
       {user && channels.length > 0 && channels.map(
         channel => channel.starredUsers && channel.starredUsers.includes(user.uid) && 
         <li key={channel.id} 
-          onClick={() => {setCurrentChannel(channel); clearNotificationForCurrent(channel.id)}}
+          onClick={() => {setCurrentChannelLocal(channel)}}
           className={(currentChannel && currentChannel.id == channel.id)? 'active': ''}
           style={{opacity: '0.7', marginLeft: '15px'}}>
           
@@ -103,9 +115,7 @@ const ChannelsSideNav = ({
       
       {channels.length > 0 && channels.map(channel => 
         <li key={channel.id} 
-          onClick={() => {
-            setCurrentChannel(channel); 
-            clearNotificationForCurrent(channel.id)}}
+          onClick={() => {setCurrentChannelLocal(channel)}}
           className={(currentChannel && currentChannel.id == channel.id)? 'active': ''}
           style={{opacity: '0.7', marginLeft: '15px'}}>
 
@@ -136,5 +146,5 @@ const mapStateToProp = state => ({
 
 export default connect(mapStateToProp, {
   setCurrentChannel, setChannels, setNotificationChannel, 
-  clearNotificationForCurrent, updateChannels
+  clearNotificationForCurrent, updateChannels, setTyping
 })(ChannelsSideNav);

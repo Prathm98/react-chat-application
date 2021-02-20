@@ -1,9 +1,10 @@
-import { SET_MESSAGES } from "../actions/types";
+import { SET_MESSAGES, SET_TYPING } from "../actions/types";
 
 const initialState = {  
   messages: [],
   channelId: null,
-  loading: true
+  loading: true,
+  typing: []
 };
 
 export default function(state=initialState, action){
@@ -15,6 +16,13 @@ export default function(state=initialState, action){
         channelId: action.payload.channelId, 
         loading: false };
         
+    case SET_TYPING:
+      return {
+        ...state,
+        typing: action.payload,
+        loading: false
+      };
+
     default:
       return state;
   }

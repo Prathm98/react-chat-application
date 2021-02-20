@@ -3,20 +3,24 @@ import { connect } from 'react-redux';
 import Spinner from '../layout/Spinner';
 import MessageItem from './MessageItem';
 import firebase from '../../firebase';
-import { setMessages } from '../../actions/messages';
+import { setMessages, setTyping } from '../../actions/messages';
 import PropTypes from 'prop-types';
+import Typing from './Typing';
 
 const Messages = ({channels: {currentChannel, loading}, user: {currentUser}, 
-  messages, setMessages}) => {
+  messages, setMessages, setTyping}) => {
   const [userCount, setUserCount] = useState(0);
   const [messagesArr, setMessagesArr] = useState([]);
-  
+  // const [typingUsersArr, setTypingUsersArr] = useState([]);
+  const [typingRef, setTypingRef] = useState(firebase.database().ref('typing'));  
+
   useEffect(() => {    
     if(currentChannel && currentUser){
       messageLoad(currentChannel.id);
+      typingUsersLoad(currentChannel.id);
     }
         
-  }, [currentChannel]);
+  }, [currentChannel]); 
 
   useEffect(() => {
     if(messages.messages.length > 0){
@@ -33,6 +37,37 @@ const Messages = ({channels: {currentChannel, loading}, user: {currentUser},
     messageRef.child(channelId).on('child_added', snap => {
       loadedMessages.push(snap.val());
       setMessages(loadedMessages, channelId);
+    });
+  }
+
+  const typingUsersLoad = channelID => {
+    let typingUsers = [];
+    typingRef.child(channelID).on('child_added', snap => {
+      if(snap.key !== currentUser.uid){
+        typingUsers.push({
+          id: snap.key,
+          name: snap.val()
+        });
+        setTyping(typingUsers);
+      }
+    });    
+
+    typingRef.child(channelID).on('child_removed', snap => {
+      const index = typingUsers.findIndex(user => user.id === snap.key);
+      if(index !== -1){
+        typingUsers = typingUsers.filter(user => user.id !== snap.key);
+        setTyping(typingUsers);        
+      }
+    });
+
+    firebase.database().ref('.info/connected').on('value', snap => {
+      if(snap.val() === true){
+        typingRef.child(channelID).child(currentUser.uid).onDisconnect().remove(err => {
+          if(err !== null){
+            console.error(err);
+          }
+        })
+      }
     });
   }
 
@@ -104,9 +139,14 @@ const Messages = ({channels: {currentChannel, loading}, user: {currentUser},
       </div>
 
       <div className="row">
-        <div className="card" style={{minHeight: '400px', padding: '5px'}}>              
+        <div className="card" style={{minHeight: '400px', padding: '5px'}}>
+          {messages && messages.typing.length > 0 && <Fragment>
+            <div className="col l12">
+            <div className="row truncate"><Typing /> {messages.typing.map(tpusr => tpusr.name+' ')}</div>
+            </div>
+          </Fragment>}    
           {messages.messages.loading? 
-            <Spinner />: 
+            <Spinner />:
             (currentChannel && currentChannel.id == messages.channelId &&
               messages.messages.length > 0)?
                 messagesArr.length > 0?
@@ -128,5 +168,5 @@ Messages.protoType = {
 };
 
 export default connect(null, {
-  setMessages
+  setMessages, setTyping
 })(Messages);

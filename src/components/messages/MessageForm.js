@@ -7,7 +7,8 @@ import LoadingSmall from '../layout/LoadingSmall';
 
 const MessageForm = ({channels: {currentChannel, loading}, user}) => {
   const [message, setMessage] = useState('');
-  const [loadingMsg, setLoadingMsg] = useState(false);  
+  const [loadingMsg, setLoadingMsg] = useState(false);
+  const [typingRef, setTypingRef] = useState(firebase.database().ref('typing'));
 
   const onSubmit = async () => {
     if(message === null || message === undefined || (message.trim()).length < 1){
@@ -28,13 +29,22 @@ const MessageForm = ({channels: {currentChannel, loading}, user}) => {
         let messageRef = currentChannel.isPrivateChannel ? 
           firebase.database().ref('privatemessages') : firebase.database().ref('messages');
         await messageRef.child(currentChannel.id).push().set(newMessage);
-        setMessage('');    
+        setMessage('');
+        typingRef.child(currentChannel.id).child(user.currentUser.uid).remove();
       } catch (err) {
         M.toast({html: "Unable to send message"});
       }
 
       setLoadingMsg(false);
     }    
+  }
+
+  const handleKeyUp = () => {
+    if(message.length > 0){
+      typingRef.child(currentChannel.id).child(user.currentUser.uid).set(user.currentUser.displayName);
+    }else{
+      typingRef.child(currentChannel.id).child(user.currentUser.uid).remove();
+    }
   }
 
   return (
@@ -45,7 +55,8 @@ const MessageForm = ({channels: {currentChannel, loading}, user}) => {
             <i className="material-icons prefix">message</i>
             <input name="message" id="message" type="text" className="validate"
               required placeholder="Type something...." value={message}
-              onChange={e => setMessage(e.target.value)} />          
+              onChange={e => setMessage(e.target.value)}
+              onKeyUp={handleKeyUp} />          
             <br /> 
             {loadingMsg ? <LoadingSmall />:
             <button type="submit" className="waves-effect waves-light btn"
