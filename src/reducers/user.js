@@ -1,4 +1,4 @@
-import { SET_USER, CLEAR_USER, SET_COLORS } from "../actions/types";
+import { SET_USER, CLEAR_USER, SET_COLORS, UPDATE_USER_AVATAR } from "../actions/types";
 
 const initialState = {
   currentUser: null,
@@ -22,6 +22,12 @@ export default function(state=initialState, action){
       return {
         ...state, 
         colors: action.payload, 
+        loading: false };
+
+    case UPDATE_USER_AVATAR:
+      return {
+        ...state, 
+        currentUser: {...state.currentUser, photoURL: action.payload},
         loading: false };
 
     case CLEAR_USER:

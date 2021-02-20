@@ -31,7 +31,7 @@ const Home = ({ channels, user, messages }) => {
               <MetaPanel channels={channels} user={user} />}
           </div>
           <AddChannel />
-          <ChnageAvatar />
+          <ChnageAvatar user={user} />
         </div>
 
         <div className="row" 

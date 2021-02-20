@@ -62,7 +62,7 @@ const ChannelsSideNav = ({
   }
 
   return (
-    loading? <Spinner /> : <Fragment>
+    <Fragment>
       <li>
         <a style={{color: (colors && colors.Links) ? colors.Links: '#000000'}} className="subheader">
           <i style={{color: (colors && colors.Links) ? colors.Links: '#000000'}} 
