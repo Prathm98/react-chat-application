@@ -10,7 +10,7 @@ import ChannelsSideNav from './ChannelsSideNav';
 import DirectMessages from './DirectMessages';
 import Spinner from './Spinner';
 
-const Navbar = ({ clearUser, user: {currentUser, loading}, colors }) => {
+const Navbar = ({ clearUser, user: {currentUser, active, loading}, colors }) => {
   const logout = async () => {
     try {
       await firebase.auth().signOut();
@@ -55,7 +55,7 @@ const Navbar = ({ clearUser, user: {currentUser, loading}, colors }) => {
 
         <div style={{backgroundColor: colors.Sidebar? colors.Sidebar: '#f3f3f3'}}>
           <ChannelsSideNav user={currentUser} colors={colors} />
-          <DirectMessages user={currentUser} colors={colors} />        
+          <DirectMessages user={currentUser} active={active} colors={colors} />        
           <li>
             <a style={{color: colors.Links? colors.Links: '#000000'}} href="#!" onClick={logout}>
               <i style={{color: colors.Links? colors.Links: '#000000'}} className="material-icons">

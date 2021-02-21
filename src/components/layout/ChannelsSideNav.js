@@ -4,7 +4,6 @@ import firebase from '../../firebase';
 import { connect } from 'react-redux';
 import { setCurrentChannel, setChannels, updateChannels,
   setNotificationChannel, clearNotificationForCurrent } from '../../actions/channels';
-import { setTyping } from '../../actions/messages';
 import Spinner from './Spinner';
 
 const ChannelsSideNav = ({ 
@@ -14,8 +13,7 @@ const ChannelsSideNav = ({
   setNotificationChannel, 
   clearNotificationForCurrent, 
   updateChannels, 
-  user,
-  setTyping,
+  user, 
   channels: {
     currentChannel, 
     channels, 
@@ -66,7 +64,6 @@ const ChannelsSideNav = ({
   }
 
   const setCurrentChannelLocal = (channelObj) => {
-    setTyping([]);
     firebase.database().ref('typing')
       .child(currentChannel.id).child(user.uid).remove();
     setCurrentChannel(channelObj);
@@ -146,5 +143,5 @@ const mapStateToProp = state => ({
 
 export default connect(mapStateToProp, {
   setCurrentChannel, setChannels, setNotificationChannel, 
-  clearNotificationForCurrent, updateChannels, setTyping
+  clearNotificationForCurrent, updateChannels
 })(ChannelsSideNav);

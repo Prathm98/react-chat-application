@@ -4,7 +4,7 @@ import LoadingSmall from './LoadingSmall';
 import firebase from '../../firebase';
 import { setNotificationChannel, clearNotificationForCurrent, 
   setPrivateChannel } from '../../actions/channels';
-import { setColor } from '../../actions/user';
+import { setColor, setActiveUsers } from '../../actions/user';
 import { connect } from 'react-redux';
 import Spinner from './Spinner';
 
@@ -12,8 +12,10 @@ const DirectMessages = ({
   user, 
   setPrivateChannel, 
   setColor, 
-  colors, 
+  colors,
+  active,
   setNotificationChannel,
+  setActiveUsers,
   clearNotificationForCurrent, 
   channels: {
     loading, 
@@ -22,7 +24,7 @@ const DirectMessages = ({
   }}) => {
   
   const [users, setUsers] = useState([]);
-  const [activeUsers, setActiveUsers] = useState([]);
+  // const [activeUsers, setActiveUsers] = useState([]);
   const [presenceRef, setPresenceRef] = useState(firebase.database().ref('presence'));
 
   useEffect(() => {
@@ -68,19 +70,25 @@ const DirectMessages = ({
       }      
     });
 
-    presenceRef.on('child_added', snap => {
-      if(uid != snap.key){        
-        if(!activeUsers.includes(snap.key)){
-          setActiveUsers([...activeUsers, snap.key]);
-        }        
+    
+    presenceRef.on('value', snap => {
+      if(uid != snap.key){  
+        let activeUser = [];
+        for(let i in snap.val()){
+          if(!activeUser.includes(snap.key)){
+            activeUser.push(i)
+          }
+        }
+        
+        setActiveUsers(activeUser);
       }      
     });
 
-    presenceRef.on('child_removed', snap => {
-      if(uid != snap.key){        
-        setActiveUsers(activeUsers.map(userId => snap.key !== userId));
-      }
-    });
+    // presenceRef.on('child_removed', snap => {
+    //   if(uid != snap.key){        
+    //     setActiveUsers(activeUser.map(userId => snap.key !== userId));
+    //   }
+    // });
   }
 
   const setChannel = userObj => {
@@ -117,7 +125,7 @@ const DirectMessages = ({
               user.uid+userItem.uid: userItem.uid+user.uid) && 
                 <span className="new badge blue"></span>}
 
-            {activeUsers.includes(userItem.uid)? 
+            {active && active.includes(userItem.uid)? 
               <i style={{color: (colors && colors.Links) ? colors.Links: '#000000'}} 
                 className="material-icons green-text right tiny" title="Online"
                 style={{cursor: 'pointer'}}>brightness_1</i>:
@@ -136,7 +144,9 @@ DirectMessages.propTypes = {
   colors: PropTypes.object.isRequired,
   setNotificationChannel: PropTypes.func.isRequired,
   clearNotificationForCurrent:PropTypes.func,
-  channels:PropTypes.object.isRequired
+  channels:PropTypes.object.isRequired,
+  active: PropTypes.array.isRequired,
+  setActiveUsers: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => ({
@@ -145,5 +155,5 @@ const mapStateToProps = state => ({
 
 export default connect(mapStateToProps, {
   setPrivateChannel, setColor, 
-  setNotificationChannel, clearNotificationForCurrent
+  setNotificationChannel, clearNotificationForCurrent, setActiveUsers
 })(DirectMessages);

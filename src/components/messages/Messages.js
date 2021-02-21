@@ -48,7 +48,7 @@ const Messages = ({channels: {currentChannel, loading}, user: {currentUser},
           id: snap.key,
           name: snap.val()
         });
-        setTyping(typingUsers);
+        setTyping(typingUsers, channelID);
       }
     });    
 
@@ -56,7 +56,7 @@ const Messages = ({channels: {currentChannel, loading}, user: {currentUser},
       const index = typingUsers.findIndex(user => user.id === snap.key);
       if(index !== -1){
         typingUsers = typingUsers.filter(user => user.id !== snap.key);
-        setTyping(typingUsers);        
+        setTyping(typingUsers, channelID);        
       }
     });
 
@@ -140,10 +140,11 @@ const Messages = ({channels: {currentChannel, loading}, user: {currentUser},
 
       <div className="row">
         <div className="card" style={{minHeight: '400px', padding: '5px'}}>
-          {messages && messages.typing.length > 0 && <Fragment>
+          {messages && currentChannel && messages.typing.channelId === currentChannel.id 
+            && messages.typing.arr.length > 0 && <Fragment>
             <div className="col l12">
-            <div className="row truncate"><Typing /> {messages.typing.map(tpusr => tpusr.name+' ')}</div>
-            </div>
+            <div className="row truncate"><Typing /> &nbsp; {messages.typing.arr.map(tpusr => tpusr.name+' ')} typing</div>
+            </div><br /><br />
           </Fragment>}    
           {messages.messages.loading? 
             <Spinner />:

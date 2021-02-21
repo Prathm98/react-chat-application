@@ -4,7 +4,7 @@ const initialState = {
   messages: [],
   channelId: null,
   loading: true,
-  typing: []
+  typing: {channelId: '', arr: []}
 };
 
 export default function(state=initialState, action){

@@ -1,4 +1,4 @@
-import { SET_USER, CLEAR_USER, SET_COLORS, UPDATE_USER_AVATAR } from "../actions/types";
+import { SET_USER, CLEAR_USER, SET_COLORS, UPDATE_USER_AVATAR, SET_ACTIVE_USERS } from "../actions/types";
 
 const initialState = {
   currentUser: null,
@@ -7,7 +7,8 @@ const initialState = {
     Sidebar: '#ffffff', 
     Links: '#000000', 
     Background: '#f3f3f3'
-  }
+  },
+  active: []
 };
 
 export default function(state=initialState, action){
@@ -17,7 +18,13 @@ export default function(state=initialState, action){
         ...state, 
         currentUser: action.payload.currentUser, 
         loading: false };
-
+    
+    case SET_ACTIVE_USERS:
+      return {
+        ...state, 
+        active: action.payload, 
+        loading: false };
+    
     case SET_COLORS:
       return {
         ...state, 

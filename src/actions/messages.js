@@ -8,9 +8,11 @@ export const setMessages = (messages, channelId) => dispatch => {
   });
 }
 
-export const setTyping = (arr) => dispatch => {
+export const setTyping = (arr, channelId) => dispatch => {
   dispatch({
     type: SET_TYPING,
-    payload: arr
+    payload: {
+      arr, channelId
+    }
   });
 }

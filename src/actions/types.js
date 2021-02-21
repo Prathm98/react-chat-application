@@ -1,4 +1,5 @@
 export const SET_USER = "SET_USER";
+export const SET_ACTIVE_USERS = "SET_ACTIVE_USERS";
 export const UPDATE_USER_AVATAR = "UPDATE_USER_AVATAR";
 export const CLEAR_USER = "CLEAR_USER";
 export const SET_CURRENT_CHANNEL = "SET_CURRENT_CHANNEL";
