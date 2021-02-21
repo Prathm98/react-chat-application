@@ -6,12 +6,12 @@ import firebase from '../../firebase';
 import { setMessages, setTyping } from '../../actions/messages';
 import PropTypes from 'prop-types';
 import Typing from './Typing';
+import Skeleton from './Skeleton';
 
 const Messages = ({channels: {currentChannel, loading}, user: {currentUser}, 
   messages, setMessages, setTyping}) => {
   const [userCount, setUserCount] = useState(0);
   const [messagesArr, setMessagesArr] = useState([]);
-  // const [typingUsersArr, setTypingUsersArr] = useState([]);
   const [typingRef, setTypingRef] = useState(firebase.database().ref('typing'));  
 
   useEffect(() => {    
@@ -103,7 +103,10 @@ const Messages = ({channels: {currentChannel, loading}, user: {currentUser},
   }
 
   return (
-    loading? <Spinner/> :
+    loading? <Fragment>
+      <Skeleton /><Skeleton /><Skeleton /><Skeleton /><Skeleton />
+      <Skeleton /><Skeleton /><Skeleton /><Skeleton /><Skeleton />  
+    </Fragment> :
     <Fragment>      
       <div className="row card" id="messageDiv">
         <div className="col l6 s12 m4" style={{ padding: '5px'}}>
@@ -138,8 +141,8 @@ const Messages = ({channels: {currentChannel, loading}, user: {currentUser},
         </div>          
       </div>
 
-      <div className="row">
-        <div className="card" style={{minHeight: '400px', padding: '5px'}}>
+      <div className="row">        
+        <div className="card" style={{height: '370px', overflowY: 'scroll', padding: '5px'}}>
           {messages && currentChannel && messages.typing.channelId === currentChannel.id 
             && messages.typing.arr.length > 0 && <Fragment>
             <div className="col l12">

@@ -54,7 +54,16 @@ const Login = ({ user }) => {
   
 
   return (
-    user.loading ? <Spinner /> :<Fragment>
+    user.loading ? <Fragment>
+      <div className="valign-wrapper" style={{height: '100vh'}}>
+        <h1 className="text-center" style={{width: '100%'}}>
+          <i className="material-icons large">whatshot</i>
+            Chat App
+            <br /><Spinner />
+            <h5>Preparing Your Chat . . .</h5>
+        </h1>        
+      </div>
+    </Fragment> :<Fragment>
       <div className="container text-center">
         <div className="row">
           <h4 className="teal-text">

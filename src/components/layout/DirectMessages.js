@@ -6,7 +6,7 @@ import { setNotificationChannel, clearNotificationForCurrent,
   setPrivateChannel } from '../../actions/channels';
 import { setColor, setActiveUsers } from '../../actions/user';
 import { connect } from 'react-redux';
-import Spinner from './Spinner';
+import DetailSkeleton from './DetailSkeleton';
 
 const DirectMessages = ({
   user, 
@@ -24,7 +24,6 @@ const DirectMessages = ({
   }}) => {
   
   const [users, setUsers] = useState([]);
-  // const [activeUsers, setActiveUsers] = useState([]);
   const [presenceRef, setPresenceRef] = useState(firebase.database().ref('presence'));
 
   useEffect(() => {
@@ -82,13 +81,7 @@ const DirectMessages = ({
         
         setActiveUsers(activeUser);
       }      
-    });
-
-    // presenceRef.on('child_removed', snap => {
-    //   if(uid != snap.key){        
-    //     setActiveUsers(activeUser.map(userId => snap.key !== userId));
-    //   }
-    // });
+    });    
   }
 
   const setChannel = userObj => {
@@ -102,7 +95,9 @@ const DirectMessages = ({
   }
 
   return (
-    loading? <Spinner /> :
+    loading? <Fragment>
+      <DetailSkeleton /><DetailSkeleton /><DetailSkeleton />
+    </Fragment> :
     <Fragment>
       <li>
         <a style={{color: (colors && colors.Links) ? colors.Links: '#000000'}} className="subheader">

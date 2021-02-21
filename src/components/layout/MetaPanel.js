@@ -1,10 +1,10 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import M from 'materialize-css';
-import Spinner from './Spinner';
 import { setColor } from '../../actions/user';
 import firebase from '../../firebase';
 import { connect } from 'react-redux';
+import DetailSkeleton from './DetailSkeleton';
 
 const MetaPanel = ({channels, user, setColor}) => {
   const [colors, setColors] = useState({
@@ -35,7 +35,9 @@ const MetaPanel = ({channels, user, setColor}) => {
   }
 
   return (
-    (channels.loading) ? <Spinner />:<Fragment>    
+    (channels.loading) ? <Fragment>
+      <DetailSkeleton /><DetailSkeleton /><DetailSkeleton /><DetailSkeleton /><DetailSkeleton />
+    </Fragment>:<Fragment>    
       <ul className="collapsible">
         {channels.currentChannel && channels.currentChannel.createdBy &&
           <li key='0' className="active">

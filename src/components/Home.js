@@ -16,7 +16,16 @@ const Home = ({ channels, user, messages }) => {
   }, []);  
   
   return (
-    (channels.loading && user.loading && messages.loading)? <Spinner/> : 
+    (channels.loading && user.loading && messages.loading)? <Fragment>
+      <div className="valign-wrapper" style={{height: '100vh'}}>
+        <h1 className="text-center" style={{width: '100%'}}>
+          <i className="material-icons large">whatshot</i>
+            Chat App
+            <br /><Spinner />
+            <h5>Preparing Your Chat . . .</h5>
+        </h1>        
+      </div>
+    </Fragment> : 
     <Fragment>
       <Navbar colors={user.colors} />
       <div className="message-sidenav" 
@@ -27,8 +36,7 @@ const Home = ({ channels, user, messages }) => {
           </div>
 
           <div className="col l4 m4 s12">          
-            {channels && messages && channels.currentChannel && 
-              <MetaPanel channels={channels} user={user} />}
+            <MetaPanel channels={channels} user={user} />
           </div>
           <AddChannel />
           <ChnageAvatar user={user} />
