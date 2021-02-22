@@ -12,12 +12,14 @@ const MetaPanel = ({channels, user, setColor}) => {
   });
 
   useEffect(() => {
-    M.AutoInit();
-
     if(user && user.colors){
       setColors(user.colors);
     }
   }, []);
+  
+  useEffect(() => {
+    M.AutoInit();
+  }, [channels]);
   
   useEffect(() => {
     if(user && user.colors){

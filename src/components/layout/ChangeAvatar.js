@@ -53,7 +53,7 @@ const ChangeAvatar = ({user: {currentUser}, updateUserAvatar}) => {
     setLoading(true);
     setError('');
     refs.storageRef
-      .child(`avatars/user-${refs.userRef.uid}`)
+      .child(`avatars/users/${refs.userRef.uid}`)
       .put(blob)
       .then(snap => {
         snap.ref.getDownloadURL().then(downloadURL => {

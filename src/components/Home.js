@@ -22,7 +22,6 @@ const Home = ({ channels, user, messages }) => {
           <i className="material-icons large">whatshot</i>
             Chat App
             <br /><Spinner />
-            <h5>Preparing Your Chat . . .</h5>
         </h1>        
       </div>
     </Fragment> : 

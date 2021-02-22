@@ -15,8 +15,12 @@ const AddFile = ({channels:{currentChannel}, user}) => {
   const sendFile = () => {
     if(file){
       if(authorized.includes(file.type)){
-        const metadata = {contentType: file.type};        
-        uploadFile(file, metadata);
+        if(file.size > (1024*1024)){
+          M.toast({html: "File size should be less than 1MB"});
+        }else{
+          const metadata = {contentType: file.type};        
+          uploadFile(file, metadata);
+        }
       }
     }else{
       M.toast({html: "Please select the file"});
@@ -26,7 +30,7 @@ const AddFile = ({channels:{currentChannel}, user}) => {
   const uploadFile = async (file, metadata) => {    
     const pathToUpload = currentChannel.id;
     const ext = file.type == "image/jpeg"? 'jpg': 'png';
-    const fileDir = currentChannel.isPrivateChannel? `chat/private-${pathToUpload}`: 'chat/public';
+    const fileDir = currentChannel.isPrivateChannel? `chat/private/${pathToUpload}`: 'chat/public';
     const filePath = `${fileDir}/${v4()}.${ext}`;
     const temp = storageRef.child(filePath).put(file);
 

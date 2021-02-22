@@ -59,9 +59,8 @@ const Login = ({ user }) => {
         <h1 className="text-center" style={{width: '100%'}}>
           <i className="material-icons large">whatshot</i>
             Chat App
-            <br /><Spinner />
-            <h5>Preparing Your Chat . . .</h5>
-        </h1>        
+            <br /><Spinner />            
+        </h1><br />
       </div>
     </Fragment> :<Fragment>
       <div className="container text-center">

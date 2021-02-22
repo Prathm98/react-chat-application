@@ -22,18 +22,22 @@ const ChannelsSideNav = ({
   }}) => {
 
   const [channelRef, setChannelRef] = useState(firebase.database().ref('channels'));
+  const [msgRef, setMsgRef] = useState(firebase.database().ref('messages'));
+  const [typingRef, setTypingRef] = useState(firebase.database().ref('typing'));
 
   useEffect(() => {
     loadChannels();
     checkNotifications();
 
     return(() => {
-      channelRef.off()
+      channelRef.off();
+      msgRef.off();
+      typingRef.off();
     });
   }, []);
 
   const checkNotifications = () => {
-    firebase.database().ref('messages').on('child_changed', snap => {
+    msgRef.on('child_changed', snap => {
       setNotificationChannel(snap.key);
     });
   }
@@ -58,13 +62,13 @@ const ChannelsSideNav = ({
     if(!currentLoaded){
       setCurrentChannel(arr[0]);
       clearNotificationForCurrent(arr[0].id);
-      firebase.database().ref('typing')
+      typingRef
         .child(arr[0].id).child(user.uid).remove();
     }
   }
 
   const setCurrentChannelLocal = (channelObj) => {
-    firebase.database().ref('typing')
+    typingRef
       .child(currentChannel.id).child(user.uid).remove();
     setCurrentChannel(channelObj);
     clearNotificationForCurrent(channelObj.id);

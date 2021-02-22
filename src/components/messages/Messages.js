@@ -14,6 +14,12 @@ const Messages = ({channels: {currentChannel, loading}, user: {currentUser},
   const [messagesArr, setMessagesArr] = useState([]);
   const [typingRef, setTypingRef] = useState(firebase.database().ref('typing'));  
 
+  useEffect(() => {
+    return (() => {
+      typingRef.off();
+    });
+  }, []);
+
   useEffect(() => {    
     if(currentChannel && currentUser){
       messageLoad(currentChannel.id);

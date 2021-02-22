@@ -25,6 +25,8 @@ const DirectMessages = ({
   
   const [users, setUsers] = useState([]);
   const [presenceRef, setPresenceRef] = useState(firebase.database().ref('presence'));
+  const [privateRef, setPrivateRef] = useState(firebase.database().ref('privatemessages'));
+  const [usersRef, setusersRef] = useState(firebase.database().ref('users'));
 
   useEffect(() => {
     if(user){
@@ -34,17 +36,23 @@ const DirectMessages = ({
 
   useEffect(() => {
     checkNotifications();
+
+    return (() => {
+      presenceRef.off();
+      privateRef.off();
+      usersRef.off();
+    });
   }, []);
 
   const checkNotifications = () => {
-    firebase.database().ref('privatemessages').on('child_changed', snap => {
+    privateRef.on('child_changed', snap => {
       setNotificationChannel(snap.key);
     });
   }
 
   const loadUsers = uid => {
     let loadedUsers = [];
-    firebase.database().ref('users').on('child_added', snap => {      
+    usersRef.on('child_added', snap => {      
       if(uid !== snap.key){
         let user = snap.val();
         user['uid'] = snap.key;        
@@ -85,7 +93,7 @@ const DirectMessages = ({
   }
 
   const setChannel = userObj => {
-    let chId = userObj.uid < user.uid? user.uid+userObj.uid: userObj.uid+user.uid;
+    let chId = userObj.uid < user.uid? user.uid+"/"+userObj.uid: userObj.uid+"/"+user.uid;
     setPrivateChannel({
       name: userObj.name.toUpperCase(),
       id: chId,
