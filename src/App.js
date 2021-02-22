@@ -25,10 +25,11 @@ function App({ setUser, clearUser }) {
     <div className="App">
       <Router>
         <Switch>
-          <Route exact path="/" component={Login} />
+          {/* <Route exact path="/" component={Home} /> */}
           <Route path="/login" component={Login} />
-          <Route path="/register" component={Register} />
-          <PrivateRoute path="/home" component={Home} />
+          <Route path="/register" component={Register} />          
+          <PrivateRoute path="/" component={Home} />
+          <Route component={Login} />
         </Switch>
       </Router>
     </div>    

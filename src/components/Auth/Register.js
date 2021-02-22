@@ -70,7 +70,7 @@ const Register = ({ user}) => {
   }
 
   if(!user.loading && user.currentUser){
-    return <Redirect to="/home" />;
+    return <Redirect to="/" />;
   }
 
   return (
